@@ -1,0 +1,58 @@
+@model IEnumerable<ECommerce.Application.DTOs.OrderDTOs.OrderDTO>
+@{
+    ViewBag.Title = "Siparişlerim";
+}
+<h2>Siparişlerim</h2>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Henüz siparişiniz yok.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tarih</th>
+                <th>Tutar</th>
+                <th>Durum</th>
+                <th>Detay</th>
+                <th>İptal</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@order.TotalAmount.ToString("C")</td>
+                <td>@order.Status.ToString()</td>
+                <td>
+                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@order.Id">Detay</a>
+                </td>
+                <td>
+                    @if (order.Status != ECommerce.Domain.Enums.OrderStatus.Cancelled && order.Status != ECommerce.Domain.Enums.OrderStatus.Delivered)
+                    {
+                        <form asp-action="Cancel" asp-route-id="@order.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Siparişi iptal etmek istediğinize emin misiniz?');">İptal Et</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">-</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+} 

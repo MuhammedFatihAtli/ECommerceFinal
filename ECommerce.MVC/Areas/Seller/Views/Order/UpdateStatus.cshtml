@@ -1,0 +1,50 @@
+﻿@model ECommerce.Application.DTOs.OrderDTOs.OrderUpdateDTO
+@{
+    ViewBag.Title = "Sipariş Durumu Güncelle";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+    // Layout = "Shared/_SellerLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Sipariş #@Model.Id Durumu Güncelle</h2>
+    <a asp-area="Seller" asp-controller="Order" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Geri Dön</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Sipariş Durumu Güncelle</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Seller" asp-controller="Order" asp-action="UpdateStatus" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">Sipariş Durumu</label>
+                        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<OrderStatus>()">
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TrackingNumber" class="form-label">Kargo Takip Numarası</label>
+                        <input asp-for="TrackingNumber" class="form-control" placeholder="Kargo takip numarası giriniz" />
+                        <span asp-validation-for="TrackingNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Notes" class="form-label">Notlar</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Sipariş hakkında notlar..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-area="Seller" asp-controller="Order" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">İptal</a>
+                        <button type="submit" class="btn btn-warning">Durumu Güncelle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

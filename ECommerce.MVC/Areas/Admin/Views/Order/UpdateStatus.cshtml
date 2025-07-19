@@ -1,0 +1,39 @@
+﻿@using ECommerce.Application.DTOs.OrderDTOs
+@using ECommerce.Domain.Entities
+@using ECommerce.Domain.Enums
+@model OrderUpdateDTO
+
+@{
+    ViewData["Title"] = "Sipariş Durumu Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4">Sipariş Durumu Güncelle</h2>
+
+<form asp-action="UpdateStatus" method="post" class="shadow-sm p-4 rounded bg-white">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<OrderStatus>()"></select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TrackingNumber" class="form-label"></label>
+        <input asp-for="TrackingNumber" class="form-control" />
+        <span asp-validation-for="TrackingNumber" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary me-2">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

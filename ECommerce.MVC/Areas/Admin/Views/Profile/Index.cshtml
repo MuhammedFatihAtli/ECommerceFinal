@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Profil Ayarları";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow-lg rounded-4 p-4">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <span class="admin-avatar" style="width:64px;height:64px;font-size:2rem;">@((ViewBag.AdminName as string)?.Substring(0,1).ToUpper())</span>
+                </div>
+                <h3 class="mb-2">@ViewBag.AdminName</h3>
+                <div class="mb-3 text-muted">@ViewBag.AdminEmail</div>
+                <hr />
+                <button class="btn btn-outline-primary" disabled>Düzenle (Yakında)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #ece5da;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #232526;
+        margin-left: 1rem;
+        box-shadow: 0 2px 8px #ece5da;
+    }
+</style> 

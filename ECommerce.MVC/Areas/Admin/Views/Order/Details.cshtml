@@ -1,0 +1,27 @@
+﻿@using ECommerce.Application.DTOs.OrderDTOs
+@model OrderDTO
+
+@{
+    ViewData["Title"] = "Sipariş Detay";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4">Sipariş Detay</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Id</dt>
+    <dd class="col-sm-9">@Model.UserId</dd>
+    <dt class="col-sm-3">Müşteri</dt>
+    <dd class="col-sm-9">@Model.UserFullName</dd>
+    <dt class="col-sm-3">Tarih</dt>
+    <dd class="col-sm-9">@Model.OrderDate.ToString("dd.MM.yyyy")</dd>
+    <dt class="col-sm-3">Durum</dt>
+    <dd class="col-sm-9">@Model.Status</dd>
+    <dt class="col-sm-3">Takip No</dt>
+    <dd class="col-sm-9">@Model.TrackingNumber</dd>
+    <dt class="col-sm-3">Notlar</dt>
+    <dd class="col-sm-9">@Model.Notes</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+<a asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-warning ms-2">Durum Güncelle</a>

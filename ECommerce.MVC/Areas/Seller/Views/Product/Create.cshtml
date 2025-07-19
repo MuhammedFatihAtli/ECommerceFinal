@@ -1,0 +1,107 @@
+﻿@model ECommerce.Application.DTOs.ProductDTOs.ProductCreateDTO
+@{
+    ViewBag.Title = "Yeni Ürün Ekle";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Yeni Ürün Ekle</h2>
+    <a asp-area="Seller" asp-controller="Product" asp-action="MyProducts" class="btn btn-secondary">Geri Dön</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Ürün Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Seller" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label">@Html.DisplayNameFor(m => m.Name)</label>
+                                <input asp-for="Name" class="form-control" placeholder="Ürün adını giriniz" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">@Html.DisplayNameFor(m => m.Description)</label>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Ürün açıklaması giriniz"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Price" class="form-label">@Html.DisplayNameFor(m => m.Price)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₺</span>
+                                            <input asp-for="Price" class="form-control" type="number" step="0.01" placeholder="0.00" />
+                                        </div>
+                                        <span asp-validation-for="Price" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Stock" class="form-label">@Html.DisplayNameFor(m => m.Stock)</label>
+                                        <input asp-for="Stock" class="form-control" type="number" placeholder="0" />
+                                        <span asp-validation-for="Stock" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="CategoryId" class="form-label">@Html.DisplayNameFor(m => m.CategoryId)</label>
+                                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+                                    <option value="">Kategori seçiniz</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="ImageFile" class="form-label">@Html.DisplayNameFor(m => m.ImageFile)</label>
+                                <div class="border rounded p-3 text-center">
+                                    <div id="imagePreview" class="mb-3" style="display: none;">
+                                        <img id="previewImg" src="#" alt="Önizleme" class="img-fluid rounded" style="max-height: 200px;">
+                                    </div>
+                                    <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" onchange="previewImage(this)" />
+                                    <small class="text-muted">JPG, PNG, GIF (Max 5MB)</small>
+                                </div>
+                                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-area="Seller" asp-controller="Product" asp-action="MyProducts" class="btn btn-secondary">İptal</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Ürünü Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

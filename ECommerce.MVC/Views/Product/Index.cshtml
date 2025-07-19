@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ECommerce.Application.DTOs.ProductDTOs.ProductDTO>
+@{
+    ViewData["Title"] = "Ürünler";
+}
+
+<h2>Ürünler</h2>
+<form asp-action="ClearOrders" asp-controller="Product"  method="post" class="mb-3">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Siparişlerimi Temizle</button>
+</form>
+
+<form method="get">
+    <label>Kategori:</label>
+    @Html.DropDownList("categoryId", ViewBag.Categories as SelectList, "Tüm Kategoriler", new { @class = "form-control", onchange = "this.form.submit();" })
+</form>
+
+<hr />
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                @if (!string.IsNullOrEmpty(product.ImagePath))
+                {
+                    <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" />
+                }
+                else
+                {
+                    <div class="card-img-top d-flex align-items-center justify-content-center" style="height:200px; background:#eee;">
+                        <span class="text-muted">Resim yok</span>
+                    </div>
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">
+                        @{
+                            var desc = product.Description ?? "";
+                            var shortDesc = desc.Length > 60 ? desc.Substring(0, 60) + "..." : desc;
+                        }
+                        @shortDesc
+                    </p>
+                    <p class="card-text"><strong>Fiyat:</strong> @product.Price.ToString("C")</p>
+                    <a href="@Url.Action("Details", "Product", new { id = product.Id })" class="btn btn-primary">Detay</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

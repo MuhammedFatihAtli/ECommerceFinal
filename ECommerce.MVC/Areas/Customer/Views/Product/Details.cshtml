@@ -1,0 +1,77 @@
+﻿@model ECommerce.Application.DTOs.ProductDTOs.ProductDTO
+
+@{
+    ViewData["Title"] = "Ürün Detayı";
+    Layout = "~/Areas/Customer/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="row g-0">
+                <div class="col-md-5 d-flex align-items-center justify-content-center bg-light">
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <img src="@Model.ImagePath" class="img-fluid rounded p-3" alt="@Model.Name" style="max-height:320px; object-fit:contain;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center w-100" style="height:320px;">
+                            <i class="fas fa-image text-muted fs-1"></i>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h3 class="card-title mb-2">@Model.Name</h3>
+                        <span class="badge bg-primary mb-2">@Model.CategoryName</span>
+                        <p class="card-text text-muted">@Model.Description ?? "Açıklama yok"</p>
+                        <hr />
+                        <div class="mb-2">
+                            <span class="h4 text-success">@Model.Price.ToString("C")</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-@(Model.Stock > 0 ? "success" : "danger")">
+                                @(Model.Stock > 0 ? $"{Model.Stock} adet stokta" : "Stokta yok")
+                            </span>
+                        </div>
+
+                        <div class="d-flex gap-2 mb-3">
+                            <a asp-area="Customer" asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Ürün Listesine Dön
+                            </a>
+                        </div>
+
+                        @if (Model.Stock > 0)
+                        {
+                            <form asp-area="Customer" asp-controller="Product" asp-action="AddToCart" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Adet:</label>
+                                    <input type="number" name="quantity" value="1" min="1" max="@Model.Stock" class="form-control w-50" />
+                                </div>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-cart-plus me-1"></i> Sepete Ekle
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mt-3">
+                                Ürün şu anda stokta yok.
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+</style>

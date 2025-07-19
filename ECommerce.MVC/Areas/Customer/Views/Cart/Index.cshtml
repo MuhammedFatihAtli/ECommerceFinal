@@ -1,0 +1,44 @@
+﻿@model ECommerce.Application.DTOs.BasketDTOs.CartDTO
+@{
+    ViewData["Title"] = "Sepetim";
+    Layout = "~/Areas/Customer/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2>Sepetim</h2>
+
+@if (!Model.Items.Any())
+{
+    <p>Sepetinizde ürün bulunmamaktadır.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ürün</th>
+                <th>Fiyat</th>
+                <th>Adet</th>
+                <th>Toplam</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.UnitPrice.ToString("C")</td>
+                    <td>@item.Stock</td>
+                    <td>@item.TotalPrice.ToString("C")</td>
+                    <td>
+                        <a asp-action="Remove" asp-route-id="@item.ProductId">Kaldır</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Toplam: @Model.TotalPrice.ToString("C")</h4>
+    <a asp-action="Clear" class="btn btn-danger">Sepeti Temizle</a>
+    <a asp-action="Checkout" class="btn btn-success">Satın Al</a>
+}

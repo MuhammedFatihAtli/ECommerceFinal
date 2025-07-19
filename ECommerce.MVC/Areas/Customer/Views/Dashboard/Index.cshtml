@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ECommerce.Application.DTOs.ProductDTOs.ProductDTO>
+@{
+    ViewBag.Title = "Anasayfa | Ürünler";
+}
+<h2 class="mb-4">Tüm Ürünler</h2>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Sistemde hiç ürün bulunamadı.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var product in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <a asp-area="Customer" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
+                        <img src="@(string.IsNullOrEmpty(product.ImagePath) ? "/images/default-product.png" : product.ImagePath)" class="card-img-top" alt="@product.Name" style="max-height:200px;object-fit:contain;">
+                    </a>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <span class="badge bg-secondary mb-2">@product.CategoryName</span>
+                        <h6 class="card-subtitle mb-2 text-success">@product.Price.ToString("C")</h6>
+                        <div class="mt-auto d-flex gap-2">
+                            <form asp-area="Customer" asp-controller="Product" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success btn-sm">Sepete Ekle</button>
+                            </form>
+                            <form asp-area="Customer" asp-controller="Product" asp-action="AddToFavorites" method="post">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Favorilere Ekle</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+

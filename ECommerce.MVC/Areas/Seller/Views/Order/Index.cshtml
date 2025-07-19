@@ -1,0 +1,118 @@
+﻿@model IEnumerable<ECommerce.Application.DTOs.OrderDTOs.OrderDTO>
+@{
+    ViewBag.Title = "Siparişlerim";
+    // Layout = "Shared/_SellerLayout.cshtml";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Siparişlerim</h2>
+    <div class="btn-group" role="group">
+        <a asp-area="Seller" asp-controller="Order" asp-action="OrdersByStatus" asp-route-status="Pending" class="btn btn-outline-warning">Beklemede</a>
+        <a asp-area="Seller" asp-controller="Order" asp-action="OrdersByStatus" asp-route-status="Confirmed" class="btn btn-outline-info">Onaylandı</a>
+        <a asp-area="Seller" asp-controller="Order" asp-action="OrdersByStatus" asp-route-status="InTransit" class="btn btn-outline-primary">Kargoda</a>
+        <a asp-area="Seller" asp-controller="Order" asp-action="OrdersByStatus" asp-route-status="Delivered" class="btn btn-outline-success">Teslim Edildi</a>
+        <a asp-area="Seller" asp-controller="Order" asp-action="OrdersByStatus" asp-route-status="Cancelled" class="btn btn-outline-danger">İptal</a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sipariş No</th>
+                        <th>Müşteri</th>
+                        <th>E-posta</th>
+                        <th>Tarih</th>
+                        <th>Tutar</th>
+                        <th>Durum</th>
+                        <th>Kargo No</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>#@order.Id</td>
+                                <td>@order.UserFullName</td>
+                                <td>@order.UserEmail</td>
+                                <td>@order.OrderDate.ToString("dd.MM.yyyy")</td>
+                                <td>₺@order.TotalAmount.ToString("N2")</td>
+                                <td>
+                                    @switch (order.Status)
+                                    {
+                                        case OrderStatus.Pending:
+                                            <span class="badge bg-warning">Beklemede</span>
+                                            break;
+                                        case OrderStatus.Confirmed:
+                                            <span class="badge bg-info">Onaylandı</span>
+                                            break;
+                                        case OrderStatus.InTransit:
+                                            <span class="badge bg-primary">Kargoda</span>
+                                            break;
+                                        case OrderStatus.Delivered:
+                                            <span class="badge bg-success">Teslim Edildi</span>
+                                            break;
+                                        case OrderStatus.Cancelled:
+                                            <span class="badge bg-danger">İptal</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@order.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>@(string.IsNullOrEmpty(order.TrackingNumber) ? "-" : order.TrackingNumber)</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-area="Seller" asp-controller="Order" asp-action="Details" asp-route-id="@order.Id" class="btn btn-outline-info">Detay</a>
+                                        <a asp-area="Seller" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@order.Id" class="btn btn-outline-warning">Durum Güncelle</a>
+                                        <button onclick="deleteOrder(@order.Id)" class="btn btn-outline-danger">Sil</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">Henüz sipariş bulunmuyor.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript ile silme işlemi -->
+<script>
+    function deleteOrder(orderId) {
+        if (confirm('Bu siparişi silmek istediğinizden emin misiniz?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/Seller/Order/Delete/' + orderId;
+
+            var token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '__RequestVerificationToken';
+            token.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            form.appendChild(token);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>

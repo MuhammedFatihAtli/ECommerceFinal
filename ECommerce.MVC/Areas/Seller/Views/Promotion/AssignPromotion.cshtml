@@ -1,0 +1,38 @@
+﻿@model ECommerce.Application.DTOs.ProductDTOs.ProductDTO
+
+@{
+    ViewData["Title"] = "Promosyon Ata";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Promosyon Ata: @Model.Name</h2>
+    <a asp-area="Seller" asp-controller="Promotion" asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Promosyon Seç</h5>
+            </div>
+            <div class="card-body">
+                <form asp-area="Seller" asp-controller="Promotion" asp-action="AssignPromotion" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Promosyon</label>
+                        <select name="promotionId" class="form-select" asp-items="ViewBag.Promotions">
+                            <option value="">Promosyon seçiniz</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a asp-area="Seller" asp-controller="Promotion" asp-action="Index" class="btn btn-secondary">İptal</a>
+                        <button type="submit" class="btn btn-primary">Ata</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,158 @@
+﻿using ECommerce.Application.DTOs.ProductDTOs;
+using ECommerce.Application.Interfaces;
+using ECommerce.Application.UnitOfWorks;
+using ECommerce.Application.VMs.Promotion;
+using ECommerce.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace ECommerce.MVC.Areas.Seller.Controllers
+{
+    [Area("Seller")]
+    [Authorize(Roles = "Seller")]
+    public class PromotionController : Controller
+    {
+        private readonly IServiceUnit _service;
+        private readonly IPromotionService _promotionService;
+        private readonly IProductService _productService;
+        private readonly UserManager<ECommerce.Domain.Entities.User> _userManager;
+
+        public PromotionController(IPromotionService promotionService, IProductService productService, UserManager<ECommerce.Domain.Entities.User> userManager, IServiceUnit service)
+
+        {
+            _promotionService = promotionService;
+            _productService = productService;
+            _userManager = userManager;
+            _service = service;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var seller = await _userManager.GetUserAsync(User);
+            var products = await _productService.GetProductsBySellerIdAsync(seller.Id);
+            var promotions = await _promotionService.GetAllAsync();
+
+            return View(new PromotionVM
+            {
+                Products = products.ToList(),
+                Promotions = promotions.ToList()
+            });
+        }
+        public async Task<IActionResult> Create()
+        {
+            var seller = await _userManager.GetUserAsync(User);
+            var products = await _productService.GetProductsBySellerIdAsync(seller.Id);
+
+            var model = new PromotionCreateVM
+            {
+                Products = products.ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(PromotionCreateVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var seller = await _userManager.GetUserAsync(User);
+                model.Products = (await _productService.GetProductsBySellerIdAsync(seller.Id)).ToList();
+                return View(model);
+            }
+
+            var promotion = new Promotion
+            {
+                Name = model.Name,
+                DiscountRate = model.DiscountRate,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+            };
+
+            await _promotionService.CreateAsync(promotion);
+
+            // Promosyon oluşturulduktan sonra ürünle ilişkilendir
+            var productDto = await _productService.GetProductByIdAsync(model.SelectedProductId);
+            if (productDto != null)
+            {
+                var editDto = new ProductEditDTO
+                {
+                    Id = productDto.Id,
+                    Name = productDto.Name,
+                    Description = productDto.Description,
+                    Price = productDto.Price,
+                    Stock = productDto.Stock,
+                    CategoryId = productDto.CategoryId,
+                    PromotionId = promotion.Id,
+                    ImagePath = productDto.ImagePath,
+                    ImageFile = null
+                };
+
+                await _productService.UpdateProductAsync(productDto.Id, editDto);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // Ürüne promosyon ata (GET)
+        public async Task<IActionResult> AssignPromotion(int productId)
+        {
+            var seller = await _userManager.GetUserAsync(User);
+            var product = await _productService.GetProductByIdAsync(productId);
+
+            if (product == null || product.SellerId != seller.Id)
+                return Unauthorized();
+
+            var promotions = await _promotionService.GetAllAsync();
+            ViewBag.Promotions = new SelectList(promotions, "Id", "Name", product.PromotionId);
+
+            return View(product);
+        }
+
+        // Ürüne promosyon ata (POST)
+        [HttpPost]
+        public async Task<IActionResult> AssignPromotion(int productId, int promotionId)
+        {
+            var seller = await _userManager.GetUserAsync(User);
+            var productDto = await _productService.GetProductByIdAsync(productId);
+
+            if (productDto == null || productDto.SellerId != seller.Id)
+                return Unauthorized();
+
+            var editDto = new ProductEditDTO
+            {
+                Id = productDto.Id,
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+                CategoryId = productDto.CategoryId,
+                PromotionId = promotionId,
+                ImagePath = productDto.ImagePath,
+                ImageFile = null
+            };
+
+            await _productService.UpdateProductAsync(productId, editDto);
+
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var promotion = await _promotionService.GetByIdAsync(id);
+            if (promotion == null)
+                return NotFound();
+
+            await _promotionService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
+

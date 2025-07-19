@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Ödeme";
+    Layout = "~/Areas/Customer/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2>Ödeme Sayfası</h2>
+<p>Burada ödeme işlemleri yapılacak. (Demo)</p>
+<form asp-action="PaymentPost" asp-controller="Cart" asp-area="Customer" method="post" class="d-inline">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-success">Ödeme Yap</button>
+</form>
+<a asp-action="Index" class="btn btn-primary">Sepete Dön</a> 

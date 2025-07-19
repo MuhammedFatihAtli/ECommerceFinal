@@ -1,0 +1,121 @@
+﻿@model ECommerce.Application.DTOs.OrderDTOs.OrderDTO
+@{
+    ViewBag.Title = "Sipariş Detayı";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+    // Layout = "Shared/_SellerLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Sipariş #@Model.Id Detayı</h2>
+    <a asp-area="Seller" asp-controller="Order" asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Sipariş Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Sipariş No:</strong> #@Model.Id</p>
+                        <p><strong>Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                        <p>
+                            <strong>Durum:</strong>
+                            @switch (Model.Status)
+                            {
+                                case OrderStatus.Pending:
+                                    <span class="badge bg-warning">Beklemede</span>
+                                    break;
+                                case OrderStatus.Confirmed:
+                                    <span class="badge bg-info">Onaylandı</span>
+                                    break;
+                                case OrderStatus.InTransit:
+                                    <span class="badge bg-primary">Kargoda</span>
+                                    break;
+                                case OrderStatus.Delivered:
+                                    <span class="badge bg-success">Teslim Edildi</span>
+                                    break;
+                                case OrderStatus.Cancelled:
+                                    <span class="badge bg-danger">İptal</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">@Model.Status</span>
+                                    break;
+                            }
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Toplam Tutar:</strong> ₺@Model.TotalAmount.ToString("N2")</p>
+                        <p><strong>Kargo No:</strong> @(string.IsNullOrEmpty(Model.TrackingNumber) ? "-" : Model.TrackingNumber)</p>
+                        <p><strong>Notlar:</strong> @(string.IsNullOrEmpty(Model.Notes) ? "-" : Model.Notes)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Sipariş Ürünleri</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Adet</th>
+                                <th>Birim Fiyat</th>
+                                <th>Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.OrderItems != null && Model.OrderItems.Any())
+                            {
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>@item.ProductTitle</td>
+                                        <td>@item.Quantity</td>
+                                        <td>₺@item.UnitPrice.ToString("N2")</td>
+                                        <td>₺@item.TotalPrice.ToString("N2")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">Ürün bilgisi bulunamadı.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Müşteri Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Ad Soyad:</strong> @Model.UserFullName</p>
+                <p><strong>E-posta:</strong> @Model.UserEmail</p>
+                <p><strong>Adres:</strong> @(string.IsNullOrEmpty(Model.ShippingAddress) ? "-" : Model.ShippingAddress)</p>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">Hızlı İşlemler</h5>
+            </div>
+            <div class="card-body">
+                <a asp-area="Seller" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-warning w-100 mb-2">Durum Güncelle</a>
+                <a asp-area="Seller" asp-controller="Order" asp-action="Index" class="btn btn-secondary w-100">Sipariş Listesi</a>
+            </div>
+        </div>
+    </div>
+</div>

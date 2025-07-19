@@ -1,0 +1,69 @@
+﻿@using ECommerce.Application.DTOs.UserDTOs
+@model UserUpdateDTO
+@{
+    ViewData["Title"] = "Kullanıcı Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var roles = ViewBag.Roles as List<string>;
+    var userRoles = ViewBag.UserRoles as IList<string>;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<h2 class="mb-4">Kullanıcı Düzenle</h2>
+
+<form asp-area="Admin" asp-controller="User" asp-action="Edit" method="post" class="shadow-sm p-4 rounded bg-white">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="mb-3">
+        <label asp-for="UserName" class="form-label">Kullanıcı Adı</label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label">Ad Soyad</label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">E-posta</label>
+        <input asp-for="Email" class="form-control" type="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Yeni Şifre</label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+        <small class="form-text text-muted">Şifreyi değiştirmek istemiyorsanız boş bırakın</small>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Roller</label>
+        <select name="selectedRoles" class="form-select" multiple size="3">
+            @foreach (var role in roles)
+            {
+                var selected = userRoles.Contains(role) ? "selected" : "";
+                 <option value="@role" selected="@selected">@role</option>
+            }
+        </select>
+        <small class="form-text text-muted">Ctrl tuşu ile birden fazla rol seçebilirsiniz</small>
+    </div>
+    <button type="submit" class="btn btn-primary me-2">Kaydet</button>
+    <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

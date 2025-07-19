@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Seller Dashboard";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1 class="display-4 text-center mb-4" style="color: #232526; font-weight: 700;">
+            Hoş Geldiniz, @User.Identity?.Name!
+        </h1>
+        <p class="lead text-center mb-5" style="color: #666;">
+            E-Ticaret Satıcı Paneli
+        </p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <div class="card-body text-center text-white">
+                <i class="fas fa-box fa-3x mb-3"></i>
+                <h5 class="card-title">Ürünler</h5>
+                <p class="card-text display-6">0</p>
+                <a href="/Seller/Product" class="btn btn-light btn-sm">Yönet</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">
+            <div class="card-body text-center text-white">
+                <i class="fas fa-tags fa-3x mb-3"></i>
+                <h5 class="card-title">Promosyonlar</h5>
+                <p class="card-text display-6">0</p>
+                <a href="/Seller/Promotion" class="btn btn-light btn-sm">Yönet</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            <div class="card-body text-center text-white">
+                <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                <h5 class="card-title">Siparişler</h5>
+                <p class="card-text display-6">0</p>
+                <a href="/Seller/Order" class="btn btn-light btn-sm">Yönet</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="card-body text-center text-white">
+                <i class="fas fa-user fa-3x mb-3"></i>
+                <h5 class="card-title">Profil</h5>
+                <p class="card-text display-6">&nbsp;</p>
+                <a href="/Seller/Profile" class="btn btn-light btn-sm">Ayarlar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Hızlı İşlemler</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a href="/Seller/Product/Create" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-plus me-2"></i>Yeni Ürün Ekle
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/Seller/Promotion/Create" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-tag me-2"></i>Yeni Promosyon Ekle
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/Seller/Profile" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-user-cog me-2"></i>Profil Ayarları
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/Seller/Order" class="btn btn-outline-info w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Siparişleri Görüntüle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}

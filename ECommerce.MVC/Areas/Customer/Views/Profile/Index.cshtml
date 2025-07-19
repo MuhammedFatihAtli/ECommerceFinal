@@ -1,0 +1,260 @@
+﻿@{
+    ViewData["Title"] = "Profilim";
+    Layout = "~/Areas/Customer/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">
+                <i class="fas fa-user-edit me-2"></i>
+                Profilim
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Profil Bilgileri -->
+    <div class="col-lg-8 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">
+                    <i class="fas fa-user me-2"></i>
+                    Profil Bilgileri
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Kullanıcı Adı</label>
+                        <div class="form-control-plaintext">@ViewBag.SellerName</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">E-posta</label>
+                        <div class="form-control-plaintext">@ViewBag.SellerEmail</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Üyelik Durumu</label>
+                        <div class="form-control-plaintext">
+                            <span class="badge bg-success">Aktif</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Kayıt Tarihi</label>
+                        <div class="form-control-plaintext">@DateTime.Now.ToString("dd MMMM yyyy")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hızlı İstatistikler -->
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Hesap İstatistikleri
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-primary bg-opacity-10 rounded">
+                            <i class="fas fa-box text-primary fs-2 mb-2"></i>
+                            <h4 class="mb-1">0</h4>
+                            <small class="text-muted">Toplam Ürün</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-success bg-opacity-10 rounded">
+                            <i class="fas fa-shopping-cart text-success fs-2 mb-2"></i>
+                            <h4 class="mb-1">0</h4>
+                            <small class="text-muted">Toplam Sipariş</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-warning bg-opacity-10 rounded">
+                            <i class="fas fa-star text-warning fs-2 mb-2"></i>
+                            <h4 class="mb-1">0</h4>
+                            <small class="text-muted">Değerlendirme</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="p-3 bg-info bg-opacity-10 rounded">
+                            <i class="fas fa-gift text-info fs-2 mb-2"></i>
+                            <h4 class="mb-1">0</h4>
+                            <small class="text-muted">Kampanya</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hızlı Erişim -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">
+                    <i class="fas fa-cogs me-2"></i>
+                    Hesap Ayarları
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-primary" onclick="showEditProfileModal()">
+                                <i class="fas fa-edit me-2"></i>
+                                Profili Düzenle
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-warning" onclick="showChangePasswordModal()">
+                                <i class="fas fa-key me-2"></i>
+                                Şifre Değiştir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-info" onclick="showNotificationSettings()">
+                                <i class="fas fa-bell me-2"></i>
+                                Bildirim Ayarları
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-danger" onclick="showDeleteAccountModal()">
+                                <i class="fas fa-trash me-2"></i>
+                                Hesabı Sil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profil Düzenleme Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Profil Düzenle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Kullanıcı Adı</label>
+                        <input type="text" class="form-control" id="userName" value="@ViewBag.SellerName" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-posta</label>
+                        <input type="email" class="form-control" id="email" value="@ViewBag.SellerEmail" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="saveProfile()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Şifre Değiştirme Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Şifre Değiştir</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Mevcut Şifre</label>
+                        <input type="password" class="form-control" id="currentPassword" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Yeni Şifre</label>
+                        <input type="password" class="form-control" id="newPassword" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Yeni Şifre (Tekrar)</label>
+                        <input type="password" class="form-control" id="confirmPassword" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="changePassword()">Değiştir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control-plaintext {
+        padding: 0.375rem 0.75rem;
+        background-color: #f8f9fa;
+        border-radius: 0.375rem;
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+</style>
+
+<script>
+    function showEditProfileModal() {
+        var modal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+        modal.show();
+    }
+
+    function showChangePasswordModal() {
+        var modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+        modal.show();
+    }
+
+    function showNotificationSettings() {
+        alert('Bildirim ayarları özelliği yakında eklenecek!');
+    }
+
+    function showDeleteAccountModal() {
+        if (confirm('Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!')) {
+            alert('Hesap silme özelliği yakında eklenecek!');
+        }
+    }
+
+    function saveProfile() {
+        // Profil kaydetme işlemi
+        alert('Profil güncelleme özelliği yakında eklenecek!');
+        var modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+        modal.hide();
+    }
+
+    function changePassword() {
+        // Şifre değiştirme işlemi
+        alert('Şifre değiştirme özelliği yakında eklenecek!');
+        var modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+        modal.hide();
+    }
+</script>

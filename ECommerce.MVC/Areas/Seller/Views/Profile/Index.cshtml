@@ -1,0 +1,211 @@
+@{
+    ViewData["Title"] = "Profilim";
+    Layout = "~/Areas/Seller/Views/Shared/_SellerLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- PROFİL HEADER -->
+<div class="profile-header d-flex align-items-center gap-4 mb-4">
+    <div class="profile-avatar">
+        <i class="bi bi-person"></i>
+    </div>
+    <div>
+        <h2 class="fw-bold mb-1">@ViewBag.SellerName</h2>
+        <div class="text-muted">@ViewBag.SellerEmail</div>
+        <span class="badge rounded-pill bg-success px-3 py-2 mt-2">Aktif</span>
+    </div>
+    <div class="ms-auto">
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="bi bi-pencil"></i> Profili Düzenle
+        </button>
+        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+            <i class="bi bi-key"></i> Şifre Değiştir
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card profile-card mb-4">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="fw-bold text-dark mb-0">Profil Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Kullanıcı Adı</label>
+                        <div class="form-control-plaintext ps-2">@ViewBag.SellerName</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">E-posta</label>
+                        <div class="form-control-plaintext ps-2">@ViewBag.SellerEmail</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Hesap Durumu</label>
+                        <span class="badge rounded-pill bg-success px-3 py-2">Aktif</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Son Giriş</label>
+                        <div class="form-control-plaintext ps-2">@DateTime.Now.ToString("dd.MM.yyyy HH:mm")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card profile-card">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="fw-bold text-dark mb-0">Hızlı Erişim</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-area="Seller" asp-controller="Product" asp-action="MyProducts" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-box"></i> Ürünlerim
+                    </a>
+                    <a asp-area="Seller" asp-controller="Order" asp-action="Index" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-bag"></i> Siparişlerim
+                    </a>
+                    <a asp-area="Seller" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profil Düzenleme Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content glassmorphism">
+            <form>
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Profili Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Kullanıcı Adı</label>
+                        <input type="text" class="form-control" value="@ViewBag.SellerName" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">E-posta</label>
+                        <input type="email" class="form-control" value="@ViewBag.SellerEmail" disabled />
+                    </div>
+                    <!-- Ek alanlar eklenebilir -->
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary" disabled>Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Şifre Değiştirme Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content glassmorphism">
+            <form>
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Şifre Değiştir</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Mevcut Şifre</label>
+                        <input type="password" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Yeni Şifre</label>
+                        <input type="password" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Yeni Şifre (Tekrar)</label>
+                        <input type="password" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-warning" disabled>Şifreyi Değiştir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons CDN (gerekirse ekle) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+<style>
+    body {
+        background: #f8f9fa !important;
+        min-height: 100vh;
+    }
+
+    .profile-header {
+        background: #fff;
+        border-radius: 1rem;
+        padding: 2rem 2rem 1rem 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        color: #212529;
+    }
+
+    .profile-card {
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+
+    .profile-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: #6c757d;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary {
+        background: #4e73df;
+        border: none;
+    }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background: #375ab7;
+        }
+
+    .glassmorphism {
+        background: #fff !important;
+        border-radius: 1rem;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    }
+
+    .fw-bold {
+        font-weight: 700 !important;
+    }
+
+    .fw-semibold {
+        font-weight: 600 !important;
+    }
+</style>

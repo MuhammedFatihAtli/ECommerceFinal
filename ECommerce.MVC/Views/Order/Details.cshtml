@@ -1,0 +1,54 @@
+@model ECommerce.Application.DTOs.OrderDTOs.OrderDTO
+@{
+    ViewBag.Title = "Sipariş Detayı";
+}
+<h2>Sipariş Detayı</h2>
+<a asp-action="Index" class="btn btn-secondary btn-sm mb-3">&laquo; Siparişlerim</a>
+<table class="table table-bordered">
+    <tr>
+        <th>Sipariş No</th>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <th>Tarih</th>
+        <td>@Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+    </tr>
+    <tr>
+        <th>Tutar</th>
+        <td>@Model.TotalAmount.ToString("C")</td>
+    </tr>
+    <tr>
+        <th>Durum</th>
+        <td>@Model.Status.ToString()</td>
+    </tr>
+    <tr>
+        <th>Adres</th>
+        <td>@Model.ShippingAddress</td>
+    </tr>
+    <tr>
+        <th>Not</th>
+        <td>@Model.Notes</td>
+    </tr>
+</table>
+<h4>Ürünler</h4>
+<table class="table table-sm table-striped">
+    <thead>
+        <tr>
+            <th>Ürün</th>
+            <th>Adet</th>
+            <th>Birim Fiyat</th>
+            <th>Toplam</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.OrderItems)
+    {
+        <tr>
+            <td>@item.ProductTitle</td>
+            <td>@item.Quantity</td>
+            <td>@item.UnitPrice.ToString("C")</td>
+            <td>@item.TotalPrice.ToString("C")</td>
+        </tr>
+    }
+    </tbody>
+</table> 
