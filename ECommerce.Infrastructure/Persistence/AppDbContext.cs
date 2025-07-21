@@ -44,6 +44,12 @@ namespace ECommerce.Infrastructure.Persistence
             modelBuilder.Entity<CartItem>()
                 .HasIndex(c => new { c.GuestId, c.ProductId });
 
+            modelBuilder.Entity<CartItem>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .IsRequired(false);
+
             // Tüm entity tiplerini döngü ile geziyoruz
             foreach (var item in modelBuilder.Model.GetEntityTypes())
             {

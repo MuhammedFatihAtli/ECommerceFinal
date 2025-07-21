@@ -2,10 +2,80 @@
 @{
     ViewBag.Title = "Anasayfa | Ürünler";
 }
-<h2 class="mb-4">Tüm Ürünler</h2>
+@{
+    bool filtreAktif = (ViewBag.SelectedCategoryId != null) || !string.IsNullOrEmpty(ViewBag.Search as string) || ViewBag.MinPrice != null || ViewBag.MaxPrice != null || (ViewBag.InStock != null && ViewBag.InStock == true);
+}
+<div class="accordion mb-4" id="filtreAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="filtreHeading">
+            <button class="accordion-button @(filtreAktif ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#filtreCollapse" aria-expanded="@(filtreAktif.ToString().ToLower())" aria-controls="filtreCollapse">
+                Filtreleme Seçenekleri
+            </button>
+        </h2>
+        <div id="filtreCollapse" class="accordion-collapse collapse @(filtreAktif ? "show" : "")" aria-labelledby="filtreHeading" data-bs-parent="#filtreAccordion">
+            <div class="accordion-body">
+                <form method="get" asp-action="Index" asp-controller="Dashboard" class="row g-3 align-items-center justify-content-center">
+                    <div class="col-auto">
+                        <label for="categoryId" class="col-form-label fw-bold">Kategori:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="categoryId" name="categoryId" class="form-select" style="width: 160px;">
+                            @if (ViewBag.SelectedCategoryId == null)
+                            {
+                                <option value="" selected>Tüm Kategoriler</option>
+                            }
+                            else
+                            {
+                                <option value="">Tüm Kategoriler</option>
+                            }
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                if (ViewBag.SelectedCategoryId != null && (int)ViewBag.SelectedCategoryId == category.Id)
+                                {
+                                    <option value="@category.Id" selected>@category.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label for="search" class="col-form-label fw-bold">Ürün Adı:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="search" name="search" class="form-control" style="width: 140px;" placeholder="Ürün adıyla ara..." value="@(ViewBag.Search ?? "")" />
+                    </div>
+                    <div class="col-auto">
+                        <label class="col-form-label fw-bold">Fiyat:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" step="0.01" min="0" name="minPrice" class="form-control" style="width: 90px;" placeholder="Min" value="@(ViewBag.MinPrice ?? "")" />
+                    </div>
+                    <div class="col-auto">
+                        <span class="fw-bold">-</span>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" step="0.01" min="0" name="maxPrice" class="form-control" style="width: 90px;" placeholder="Max" value="@(ViewBag.MaxPrice ?? "")" />
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inStock" name="inStock" value="true" @(ViewBag.InStock != null && ViewBag.InStock == true ? "checked" : "") />
+                            <label class="form-check-label" for="inStock">Sadece stokta olanlar</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Filtrele</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @if (!Model.Any())
 {
-    <div class="alert alert-info">Sistemde hiç ürün bulunamadı.</div>
+    <div class="alert alert-info text-center">Sistemde hiç ürün bulunamadı.</div>
 }
 else
 {

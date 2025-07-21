@@ -41,12 +41,29 @@ namespace ECommerce.MVC.Controllers
 
             if (result.IsSuccess)
             {
-                // Admin kullanıcısı için direkt Admin Dashboard'a yönlendir
-                if (model.Email == "admin@site.com")
+                // Kullanıcıyı email ile bul
+                var user = await _authService.GetCurrentUserAsync(User);
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                    var roles = await _authService.GetUserRolesAsync(user);
+                    if (roles != null && roles.Count > 0)
+                    {
+                        var role = roles[0]; // Varsayılan olarak ilk rolü al
+                        if (role == "Admin")
+                        {
+                            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                        }
+                        else if (role == "Seller")
+                        {
+                            return RedirectToAction("Index", "Dashboard", new { area = "Seller" });
+                        }
+                        else if (role == "Customer")
+                        {
+                            return RedirectToAction("Index", "Dashboard", new { area = "Customer" });
+                        }
+                    }
                 }
-                
+                // Rol bulunamazsa ana sayfaya yönlendir
                 return RedirectToAction("Index", "Home");
             }
 

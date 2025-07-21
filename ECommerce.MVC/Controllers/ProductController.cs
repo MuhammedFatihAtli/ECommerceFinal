@@ -65,7 +65,8 @@ namespace ECommerce.MVC.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                TempData["Error"] = "Favorilere eklemek için giriş yapmalısınız.";
+                TempData["Error"] = "Favorilere eklemek için lütfen giriş yapınız.";
+                TempData["ShowFavoriteMessage"] = true;
                 return RedirectToAction("Login", "Account"); // Giriş sayfasına yönlendir
             }
 
@@ -109,7 +110,12 @@ namespace ECommerce.MVC.Controllers
         {
             // Kullanıcı kimliğini al
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Login", "Account", new { area = "" });
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["Error"] = "Sepete eklemek için lütfen giriş yapınız.";
+                TempData["ShowCartMessage"] = true;
+                return RedirectToAction("Login", "Account", new { area = "" });
+            }
 
             await _cartService.AddToCartAsync(int.Parse(userId), productId);
             return RedirectToAction("Index", "Cart");

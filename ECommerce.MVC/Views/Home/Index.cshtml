@@ -1,8 +1,215 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    bool filtreAktif = (ViewBag.SelectedCategoryId != null) || !string.IsNullOrEmpty(ViewBag.Search as string) || ViewBag.MinPrice != null || ViewBag.MaxPrice != null || (ViewBag.InStock != null && ViewBag.InStock == true);
+}
+<div class="accordion mb-4" id="filtreAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="filtreHeading">
+            <button class="accordion-button @(filtreAktif ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#filtreCollapse" aria-expanded="@(filtreAktif.ToString().ToLower())" aria-controls="filtreCollapse">
+                Filtreleme Seçenekleri
+            </button>
+        </h2>
+        <div id="filtreCollapse" class="accordion-collapse collapse @(filtreAktif ? "show" : "")" aria-labelledby="filtreHeading" data-bs-parent="#filtreAccordion">
+            <div class="accordion-body">
+                <form method="get" asp-action="Index" asp-controller="Home" class="row g-3 align-items-center justify-content-center">
+                    <div class="col-auto">
+                        <label for="categoryId" class="col-form-label fw-bold">Kategori:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="categoryId" name="categoryId" class="form-select" style="width: 160px;">
+                            @if (ViewBag.SelectedCategoryId == null)
+                            {
+                                <option value="" selected>Tüm Kategoriler</option>
+                            }
+                            else
+                            {
+                                <option value="">Tüm Kategoriler</option>
+                            }
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                if (ViewBag.SelectedCategoryId != null && (int)ViewBag.SelectedCategoryId == category.Id)
+                                {
+                                    <option value="@category.Id" selected>@category.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label for="search" class="col-form-label fw-bold">Ürün Adı:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="search" name="search" class="form-control" style="width: 140px;" placeholder="Ürün adıyla ara..." value="@(ViewBag.Search ?? "")" />
+                    </div>
+                    <div class="col-auto">
+                        <label class="col-form-label fw-bold">Fiyat:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" step="0.01" min="0" name="minPrice" class="form-control" style="width: 90px;" placeholder="Min" value="@(ViewBag.MinPrice ?? "")" />
+                    </div>
+                    <div class="col-auto">
+                        <span class="fw-bold">-</span>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" step="0.01" min="0" name="maxPrice" class="form-control" style="width: 90px;" placeholder="Max" value="@(ViewBag.MaxPrice ?? "")" />
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inStock" name="inStock" value="true" @(ViewBag.InStock != null && ViewBag.InStock == true ? "checked" : "") />
+                            <label class="form-check-label" for="inStock">Sadece stokta olanlar</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Filtrele</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- Ürünler Bölümü -->
+<div class="container mt-4">
+    <h3 class="mb-4 text-center">Ürünler</h3>
+    <div class="row">
+        @if (ViewBag.Products != null)
+        {
+            foreach (var product in ViewBag.Products)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="d-flex align-items-center justify-content-center" style="height:220px; background:#f5f6fa;">
+                            @if (!string.IsNullOrEmpty(product.ImagePath))
+                            {
+                                <img src="@product.ImagePath" alt="@product.Name" style="max-width:200px; max-height:200px; object-fit:contain; background:#f5f6fa; border-radius:12px;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center w-100 h-100" style="height:200px; background:#f5f6fa;">
+                                    <span class="text-muted">Resim yok</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">
+                                @{
+                                    var desc = product.Description ?? "";
+                                    var shortDesc = desc.Length > 60 ? desc.Substring(0, 60) + "..." : desc;
+                                }
+                                @shortDesc
+                            </p>
+                            <p class="card-text"><strong>Fiyat:</strong> @product.Price.ToString("C")</p>
+                            <div class="d-flex justify-content-center gap-2 mt-3">
+                                <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@product.Id" />
+                                    <button type="submit" class="btn btn-success btn-sm">Sepete Ekle</button>
+                                </form>
+                                <form asp-controller="Product" asp-action="AddToFavorites" method="post" class="d-inline">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Favorilere Ekle</button>
+                                </form>
+                            </div>
+                            <a href="@Url.Action("Details", "Product", new { id = product.Id })" class="btn btn-primary btn-sm mt-2 w-100">Detay</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted">Ürün bulunamadı.</div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .index-hero {
+            background: linear-gradient(135deg, #f5f6fa 60%, #ece5da 100%);
+            border-radius: 32px;
+            box-shadow: 0 8px 32px 0 rgba(200,200,200,0.10), 0 1.5px 0 #ece5da;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .index-search-form {
+            background: rgba(255, 255, 245, 0.85);
+            border-radius: 32px;
+            box-shadow: 0 4px 24px 0 rgba(236,229,218,0.18);
+            padding: 1.5rem 1rem;
+            max-width: 600px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .index-search-input {
+            background: rgba(245, 246, 250, 0.95);
+            border: 1px solid #ece5da;
+            color: #232526;
+            border-radius: 20px 0 0 20px;
+            box-shadow: 2px 2px 8px 0 #ece5da, -2px -2px 8px 0 #fff;
+        }
+
+            .index-search-input::placeholder {
+                color: #b0b0b0;
+            }
+
+        .index-search-btn {
+            border-radius: 0 20px 20px 0;
+            background: linear-gradient(90deg, #ece5da 60%, #f5f6fa 100%);
+            color: #232526;
+            border: none;
+            box-shadow: 2px 2px 8px 0 #ece5da, -2px -2px 8px 0 #fff;
+            font-weight: 600;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+
+            .index-search-btn:hover {
+                background: linear-gradient(90deg, #f5f6fa 60%, #ece5da 100%);
+                box-shadow: 4px 4px 16px #ece5da, -4px -4px 16px #fff;
+                transform: translateY(-2px) scale(1.04);
+            }
+
+        .index-card.card-3d {
+            background: rgba(255,255,255,0.95);
+            border-radius: 28px;
+            box-shadow: 8px 8px 24px #ece5da, -8px -8px 24px #fff;
+            border: 1px solid #ece5da;
+        }
+
+        .index-card .card-title {
+            color: #232526;
+            font-weight: 700;
+        }
+
+        .index-card .card-text {
+            color: #6c757d;
+        }
+        .card-img-top, .product-image {
+            background: #f5f6fa !important;
+            object-fit: contain;
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            margin: 0 auto;
+            display: block;
+        }
+        .card {
+            border-radius: 18px;
+        }
+        .btn-success.btn-sm, .btn-outline-danger.btn-sm, .btn-primary.btn-sm {
+            font-size: 0.95rem;
+            padding: 0.4rem 1.1rem;
+            border-radius: 16px;
+        }
+        .btn-primary.btn-sm.w-100 {
+            margin-top: 0.5rem;
+        }
+    </style>
+}

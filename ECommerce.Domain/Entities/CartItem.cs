@@ -7,7 +7,7 @@ namespace ECommerce.Domain.Entities
         public int Id { get; set; }
 
         // Sepet sahibi kullanıcı
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public virtual User User { get; set; }
 
         // Sepete eklenen ürün
