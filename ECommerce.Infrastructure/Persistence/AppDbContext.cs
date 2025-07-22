@@ -35,6 +35,7 @@ namespace ECommerce.Infrastructure.Persistence
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -75,13 +76,13 @@ namespace ECommerce.Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                // Bu sadece design-time için kullanılır
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ECommerce2;Integrated Security=True;");
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        // Bu sadece design-time için kullanılır
+        //        optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ECommerce2;Integrated Security=True;");
+        //    }
+        //}
     }
 }

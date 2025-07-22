@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using ECommerce.Application.DTOs;
 using ECommerce.Application.DTOs.AccountDTOs;
 using ECommerce.Application.DTOs.BasketDTOs;
 using ECommerce.Application.DTOs.CategoryDTOs;
@@ -14,6 +10,11 @@ using ECommerce.Application.DTOs.SellerDTOs;
 using ECommerce.Application.DTOs.UserDTOs;
 using ECommerce.Application.VMs.Account;
 using ECommerce.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ECommerce.Application.Mappers
 {
@@ -36,9 +37,11 @@ namespace ECommerce.Application.Mappers
 
             // Product mappings
             CreateMap<Product, ProductDTO>()
-                .ForMember(dest => dest.ImageFile, opt => opt.Ignore())
-                .ReverseMap()
-                .ForMember(dest => dest.ImagePath, opt => opt.Ignore());
+    .ForMember(dest => dest.ImageFile, opt => opt.Ignore())
+    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : "Bilinmeyen Kategori"))
+    .ReverseMap()
+    .ForMember(dest => dest.ImagePath, opt => opt.Ignore());
+
             CreateMap<ProductCreateDTO, Product>();
             CreateMap<Product, ProductEditDTO>().ReverseMap();
             CreateMap<ProductDTO, ProductEditDTO>().ReverseMap();
@@ -76,6 +79,8 @@ namespace ECommerce.Application.Mappers
                 .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Product.Price))
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Product.ImagePath))
                 .ReverseMap();
+
+            CreateMap<Comment, CommentDTO>().ReverseMap();
         }
     }
 }

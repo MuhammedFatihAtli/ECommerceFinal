@@ -1,26 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ECommerce.Application.DTOs;
+using ECommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using ECommerce.Application.DTOs;
-using ECommerce.Application.Interfaces;
 
-namespace ECommerce.MVC.Areas.Customer.Controllers
+namespace ECommerce.MVC.Controllers
 {
-    [Area("Customer")]
-    [Authorize(Roles = "Customer")]
-    public class ProfileController : Controller
+    public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
-        public ProfileController(ICommentService commentService)
+
+
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
-        }
-        public IActionResult Index()
-        {
-            // Giriş yapan satıcının bilgilerini ViewBag ile gönder
-            ViewBag.CustomerName = User.Identity?.Name;
-            ViewBag.CustomerEmail = User.FindFirstValue(ClaimTypes.Email);
-            return View();
         }
 
         [HttpPost]
@@ -29,13 +21,16 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Product", new { id = commentDto.ProductId });
             }
+
             commentDto.CreatedAt = DateTime.Now;
+
             int? userId = null;
             if (User.Identity.IsAuthenticated)
             {
                 commentDto.UserName = User.Identity.Name;
+
                 var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
                 if (userIdClaim != null)
                     userId = int.Parse(userIdClaim.Value);
@@ -44,9 +39,13 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             {
                 commentDto.UserName = "Misafir";
             }
+
             await _commentService.AddCommentAsync(commentDto, userId);
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Details", "Product", new { id = commentDto.ProductId });
         }
+
+
+
     }
 }
-

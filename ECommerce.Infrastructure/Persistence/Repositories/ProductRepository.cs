@@ -45,5 +45,16 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
                 .Include(p => p.Category)
                 .ToListAsync();
         }
+        public async Task<Product> GetByIdAsync(int id, bool includeCategory = false)
+        {
+            if (includeCategory)
+            {
+                return await _context.Products
+                    .Include(p => p.Category)
+                    .FirstOrDefaultAsync(p => p.Id == id);
+            }
+            return await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

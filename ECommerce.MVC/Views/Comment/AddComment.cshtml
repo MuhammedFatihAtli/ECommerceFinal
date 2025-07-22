@@ -1,0 +1,27 @@
+﻿@model ECommerce.Application.DTOs.CommentDTO
+
+@{
+    ViewData["Title"] = "Yorum Ekle";
+}
+
+<h2>Yorum Yaz</h2>
+
+<form asp-action="AddComment" asp-controller="Comment" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="ProductId" />
+
+    <div class="mb-3">
+        <label asp-for="Text" class="form-label">Yorumunuz</label>
+        <textarea asp-for="Text" class="form-control" rows="5" required></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

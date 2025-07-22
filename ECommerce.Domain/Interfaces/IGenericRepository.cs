@@ -39,5 +39,7 @@ namespace ECommerce.Domain.Interfaces
         void Update(T item);
         void Delete(T item);
         void SoftDelete(T item);
+        Task AddAsync(T entity);
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
     }
 }

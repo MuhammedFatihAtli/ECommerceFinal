@@ -186,6 +186,8 @@ namespace ECommerce.Application.Services
             {
                 throw new Exception("Ürün bulunamadı");
             }
+            if (product.Category == null)
+                throw new Exception("Ürünün kategorisi bulunamadı");
             return _mapper.Map<ProductDTO>(product);
         }
 

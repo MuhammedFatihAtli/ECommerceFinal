@@ -147,6 +147,36 @@
     </div>
 </div>
 
+<!-- Yorum Ekleme Formu -->
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comment-dots me-2"></i>
+                        Yorum Ekle
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddComment" method="post">
+                        <div class="mb-3">
+                            <label for="Text" class="form-label">Yorumunuz</label>
+                            <textarea class="form-control" id="Text" name="Text" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ProductId" class="form-label">Ürün ID (örnek için)</label>
+                            <input type="number" class="form-control" id="ProductId" name="ProductId" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Yorumu Gönder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <!-- Profil Düzenleme Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
     <div class="modal-dialog">

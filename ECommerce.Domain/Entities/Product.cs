@@ -14,6 +14,7 @@ namespace ECommerce.Domain.Entities
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string? ImagePath { get; set; }
+        public string? CategoryName { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
@@ -26,6 +27,7 @@ namespace ECommerce.Domain.Entities
         public int? PromotionId { get; set; }
         public virtual Promotion? Promotion { get; set; }
 
-      
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     }
 }

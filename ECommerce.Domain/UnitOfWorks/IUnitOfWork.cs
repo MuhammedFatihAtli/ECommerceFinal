@@ -18,6 +18,7 @@ namespace ECommerce.Domain.UnitOfWorks
         ISellerRepository SellerRepository { get; }
         IPromotionRepository PromotionRepository { get; }
         ICustomerRepository CustomerRepository { get; }
+        ICommentRepository CommentRepository { get; }
         Task<int> SaveChangesAsync();
         int SaveChanges();
         Task BeginTransactionAsync();

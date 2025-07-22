@@ -29,6 +29,10 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
         {
             _dbSet.Add(item);
         }
+        public async Task AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
+        }
 
         // Belirtilen şartı sağlayan herhangi bir veri var mı kontrol eder
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> condition)
@@ -183,6 +187,10 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
                 query = include(query);
 
             return await query.ToListAsync();
+        }
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().Where(predicate).ToListAsync();
         }
     }
 

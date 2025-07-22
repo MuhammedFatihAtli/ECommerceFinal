@@ -13,6 +13,7 @@ namespace ECommerce.Domain.Interfaces
         Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
         Task<List<Product>> GetProductsBySellerIdAsync(int sellerId);
         Task<List<Product>> GetProductsByGuestIdAsync(int? guestId);
+        Task<Product> GetByIdAsync(int id, bool includeCategory = false);
 
 
     }

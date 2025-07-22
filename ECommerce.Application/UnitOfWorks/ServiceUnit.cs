@@ -11,7 +11,7 @@ namespace ECommerce.Application.UnitOfWorks
     {
         private readonly ICustomerService _customerService;
 
-        public ServiceUnit(ICategoryService categoryService, IUserService userService, IProductService productService, IOrderService orderService, ISellerService sellerService, ICartService cartService, ICustomerService customerService)
+        public ServiceUnit(ICategoryService categoryService, IUserService userService, IProductService productService, IOrderService orderService, ISellerService sellerService, ICartService cartService, ICustomerService customerService, ICommentService commentService)
         {
             CategoryService = categoryService;
             UserService = userService;
@@ -20,6 +20,7 @@ namespace ECommerce.Application.UnitOfWorks
             SellerService = sellerService;
             _customerService = customerService;
             CartService = cartService;
+            CommentService = commentService;
         }
         public ICategoryService CategoryService { get; }
         public IUserService UserService { get;  }
@@ -28,5 +29,6 @@ namespace ECommerce.Application.UnitOfWorks
         public ISellerService SellerService { get; }
         public ICustomerService CustomerService => _customerService;
         public ICartService CartService { get; set; } 
+        public ICommentService CommentService { get; set; }
     }
 }

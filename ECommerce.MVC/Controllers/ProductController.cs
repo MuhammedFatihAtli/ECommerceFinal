@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using ECommerce.Application.DTOs;
+using ECommerce.Application.DTOs.ProductDTOs;
 using ECommerce.Application.Interfaces;
 using ECommerce.Application.Services;
 using ECommerce.Application.UnitOfWorks;
+using ECommerce.Domain.Entities;
+using ECommerce.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ECommerce.Domain.Entities;
-using System.Threading.Tasks;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ECommerce.MVC.Controllers
 {
@@ -45,18 +48,40 @@ namespace ECommerce.MVC.Controllers
             return View(products);
         }
 
-        // 🔹 Ürün detayları
         public async Task<IActionResult> Details(int id)
         {
-            var product = await _service.ProductService.GetProductByIdAsync(id);
+            ProductDTO product = null;
+            try
+            {
+                product = await _service.ProductService.GetProductByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+
             if (product == null)
             {
                 TempData["Error"] = "Ürün bulunamadı!";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(product); // View: ProductDTO
+            var comments = await _service.CommentService.GetCommentsByProductIdAsync(id) ?? new List<CommentDTO>();
+
+            var viewModel = new ProductDetailVM
+            {
+                Product = product,
+                Comments = comments,
+                NewComment = new CommentDTO { ProductId = id }
+            };
+
+            return View(viewModel);
         }
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

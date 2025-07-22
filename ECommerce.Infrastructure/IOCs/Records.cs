@@ -1,6 +1,5 @@
 ﻿using ECommerce.Application.Interfaces;
 using ECommerce.Application.Services;
-using ECommerce.Application.Services;
 using ECommerce.Application.UnitOfWorks;
 using ECommerce.Domain.Entities;
 using ECommerce.Domain.Interfaces;
@@ -28,6 +27,7 @@ namespace ECommerce.Infrastructure.IOCs
             services.AddScoped<ICustomerRepository, CustomerRepository>(); //**
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>(); //**
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -44,6 +44,7 @@ namespace ECommerce.Infrastructure.IOCs
             services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<ICommentService, CommentService>();
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         }

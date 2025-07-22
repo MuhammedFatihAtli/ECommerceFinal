@@ -26,7 +26,8 @@ namespace ECommerce.Infrastructure.UnitOfWorks
     IOrderRepository orderRepository,
     ISellerRepository sellerRepository,
     IPromotionRepository promotionRepository,
-    ICustomerRepository customerRepository //**
+    ICustomerRepository customerRepository,
+    ICommentRepository commentRepository//**
 )
         {
             _context = context;
@@ -37,7 +38,8 @@ namespace ECommerce.Infrastructure.UnitOfWorks
             OrderRepository = orderRepository;
             SellerRepository = sellerRepository;
             PromotionRepository = promotionRepository;
-            CustomerRepository = customerRepository; // **
+            CustomerRepository = customerRepository;
+            CommentRepository = commentRepository;// **
         }
 
         public ICategoryRepository CategoryRepository { get; }
@@ -50,6 +52,7 @@ namespace ECommerce.Infrastructure.UnitOfWorks
         public IPromotionRepository PromotionRepository { get; }
 
         public ICustomerRepository CustomerRepository { get; }
+        public ICommentRepository CommentRepository { get; }
 
         public int SaveChanges()
         {

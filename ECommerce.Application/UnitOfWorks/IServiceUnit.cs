@@ -16,5 +16,6 @@ namespace ECommerce.Application.UnitOfWorks
         ISellerService SellerService { get; }
         ICustomerService CustomerService { get; }
         ICartService CartService { get; }
+        ICommentService CommentService { get; }
     }
 }

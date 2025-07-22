@@ -24,6 +24,7 @@ namespace ECommerce.Domain.Entities
         public string? Password { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public void Restore()
         {
             if (IsDeleted)

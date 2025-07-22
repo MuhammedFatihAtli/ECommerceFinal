@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ECommerce.Domain.Entities;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using ECommerce.Application.DTOs;
+using System;
+using System.Linq;
 
 namespace ECommerce.MVC.Areas.Customer.Controllers
 {
@@ -55,7 +58,9 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
                 TempData["Error"] = "Ürün bulunamadı!";
                 return RedirectToAction(nameof(Index));
             }
-
+            // Yorumları çek
+            var comments = await _service.CommentService.GetCommentsByProductIdAsync(id);
+            ViewBag.Comments = comments;
             return View(product); // View: ProductDTO
         }
 
@@ -96,6 +101,37 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
 
             await _cartService.AddToCartAsync(int.Parse(userId), productId);
             return RedirectToAction("Index", "Cart");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(int ProductId, string Text)
+        {
+            if (string.IsNullOrWhiteSpace(Text))
+            {
+                TempData["CommentError"] = "Yorum metni boş bırakılamaz.";
+                return RedirectToAction("Details", new { id = ProductId });
+            }
+            var commentDto = new CommentDTO
+            {
+                ProductId = ProductId,
+                Text = Text,
+                CreatedAt = DateTime.Now
+            };
+            int? userId = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                commentDto.UserName = User.Identity.Name;
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                if (userIdClaim != null)
+                    userId = int.Parse(userIdClaim.Value);
+            }
+            else
+            {
+                commentDto.UserName = "Misafir";
+            }
+            await _service.CommentService.AddCommentAsync(commentDto, userId);
+            return RedirectToAction("Details", new { id = ProductId });
         }
 
         [HttpPost]
