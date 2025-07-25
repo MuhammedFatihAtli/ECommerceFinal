@@ -16,6 +16,7 @@ namespace ECommerce.Infrastructure.Persistence
 {
     public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
+        //veritabanı ile uygulaman arasında köprü
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
@@ -76,13 +77,6 @@ namespace ECommerce.Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        // Bu sadece design-time için kullanılır
-        //        optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ECommerce2;Integrated Security=True;");
-        //    }
-        //}
+        
     }
 }

@@ -1,13 +1,9 @@
 ﻿using ECommerce.Application.DTOs.AccountDTOs;
 using ECommerce.Application.DTOs.SellerDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // ISellerService.cs, satıcı işlemleri için gerekli servis arayüzünü tanımlar.
     public interface ISellerService
     {
         Task<List<SellerDTO>> GetAllAsync();

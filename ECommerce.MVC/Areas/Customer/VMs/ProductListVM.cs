@@ -1,5 +1,6 @@
 ﻿namespace ECommerce.MVC.Areas.Customer.VMs
 {
+    // Ürünleri listelemek için kullanılan ViewModel
     public class ProductListVM
     {
         public int Id { get; set; }

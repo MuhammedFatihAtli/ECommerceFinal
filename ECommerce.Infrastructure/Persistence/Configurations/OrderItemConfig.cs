@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Infrastructure.Persistence.Configurations
 {
+    // OrderItemConfig sınıfı, OrderItem entity'sinin EF Core ile nasıl eşleneceğini tanımlar.
     public class OrderItemConfig : IEntityTypeConfiguration<OrderItem>
     {
         public void Configure(EntityTypeBuilder<OrderItem> builder)

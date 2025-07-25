@@ -1,12 +1,8 @@
 ﻿using ECommerce.Application.DTOs.CategoryDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // ICategoryService.cs", kategori işlemleri için gerekli servis arayüzünü tanımlar.
     public interface ICategoryService
     {
         Task<IEnumerable<CategoryDTO>> GetAllAsync(bool isTrack = true, bool ignoreFilters = false);

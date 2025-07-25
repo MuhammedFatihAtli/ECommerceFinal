@@ -8,6 +8,7 @@ using ECommerce.Domain.Interfaces;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // PromotionRepository sınıfı, Promotion entity'si için veritabanı işlemlerini gerçekleştirir.
     public class PromotionRepository : GenericRepository<Promotion>, IPromotionRepository
     {
         private readonly AppDbContext _context;

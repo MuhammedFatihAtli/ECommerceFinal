@@ -1,12 +1,8 @@
 ﻿using ECommerce.Application.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // ICommentService.cs, yorum ekleme ve ürün yorumlarını alma işlemlerini tanımlar.
     public interface ICommentService
     {
         Task AddCommentAsync(CommentDTO dto, int? userId);

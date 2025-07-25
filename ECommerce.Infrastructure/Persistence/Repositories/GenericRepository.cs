@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    
     // Generic Repository (Genel Depo) sınıfı – EF Core ile çalışmak için
     public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
     {

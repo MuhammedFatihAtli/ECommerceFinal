@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs
 {
+    // CommentDTO.cs, ürün yorumlarını tutmak için gerekli bilgileri içerir.
     public class CommentDTO
     {
         public int Id { get; set; }

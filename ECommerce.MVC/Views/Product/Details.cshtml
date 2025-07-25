@@ -76,20 +76,25 @@
 
         <!-- Yorumlar Bölümü -->
         <div class="card shadow-sm p-3">
-            <h4>Yorumlar (@Model.Comments?.Count ?? 0)</h4>
+            <h4 class="mb-3">Yorumlar <span class="badge bg-secondary">@((Model.Comments?.Count ?? 0))</span></h4>
+
             @if (Model.Comments == null || !Model.Comments.Any())
             {
-                <p>Henüz yorum yapılmamış.</p>
+                <p class="text-muted">Henüz yorum yapılmamış.</p>
             }
             else
             {
-                <div>
+                <div class="comment-list">
                     @foreach (var comment in Model.Comments)
                     {
-                        <div class="mb-3 border rounded p-3">
-                            <strong>@(string.IsNullOrEmpty(comment.UserName) ? "Misafir" : comment.UserName)</strong>
-                            <small class="text-muted"> - @comment.CreatedAt.ToString("g")</small>
-                            <p>@comment.Text</p>
+                        <div class="comment-item border-bottom pb-2 mb-3">
+                            <div class="comment-meta text-muted small mb-1">
+                                <strong>@(string.IsNullOrEmpty(comment.UserName) ? "Misafir" : comment.UserName)</strong>
+                                <span> • @comment.CreatedAt.ToString("g")</span>
+                            </div>
+                            <div class="comment-text small">
+                                @comment.Text
+                            </div>
                         </div>
                     }
                 </div>
@@ -101,15 +106,15 @@
             {
                 <div class="row">
                     <div class="col-md-12">
-                        <h3>Yorum Yap</h3>
+                        <h5>Yorum Yap</h5>
                         <form asp-controller="Comment" asp-action="AddComment" method="post">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="ProductId" value="@Model.Product.Id" />
                             <div class="form-group mb-2">
-                                <label>Yorumunuz</label>
+                                <label for="Text">Yorumunuz</label>
                                 <textarea name="Text" class="form-control" rows="3" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Gönder</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Gönder</button>
                         </form>
                     </div>
                 </div>
@@ -126,5 +131,22 @@
     .card-title {
         font-size: 1.5rem;
         font-weight: 700;
+    }
+
+    .comment-list {
+        font-size: 0.9rem;
+    }
+
+    .comment-item {
+        padding-left: 5px;
+    }
+
+    .comment-meta {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .comment-text {
+        font-size: 0.9rem;
     }
 </style>

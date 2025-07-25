@@ -9,6 +9,7 @@ namespace ECommerce.Application.DTOs.ProductDTOs
 {
     public record ProductDTO : BaseDTO
     {
+        // ProductDTO.cs", ürün bilgilerini tutar.
         public ProductDTO(string name)
         {
             Name = name;
@@ -18,13 +19,13 @@ namespace ECommerce.Application.DTOs.ProductDTOs
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
-        public string Image { get; set; }//mevcut resim yolu için
-        public IFormFile? ImageFile { get; set; }// yeni resim yüklemek için
-        public string CategoryName { get; set; }  // Include ile çekmek için
+        public string Image { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public string CategoryName { get; set; }  
 
-        public int CategoryId { get; set; } // Foreign key for Category
+        public int CategoryId { get; set; } 
 
-        public string ImagePath { get; set; } // Ürün görseli yolu
+        public string ImagePath { get; set; } 
         public int? SellerId { get; set; }
         public int? PromotionId { get; set; }
 

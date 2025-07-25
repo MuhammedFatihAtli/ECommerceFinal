@@ -23,12 +23,13 @@ namespace ECommerce.Application.Services
             _mapper = mapper;
         }
 
+        // GetProfilesAsync metodu, tüm kayıtlı profilleri asenkron olarak getirir.
         public async Task<List<ProfileDTO>> GetProfilesAsync()
         {
             var enrollments = await _unitOfWork.EnrollmentRepository.GetAllWithUserAsync();
             return _mapper.Map<List<ProfileDTO>>(enrollments);
         }
-
+        // GetProfileWithUserIdAsync metodu, verilen kullanıcı ID'sine sahip profili asenkron olarak getirir.
         public async Task<List<ProfileDTO>> GetProfileWithUserIdAsync(int userId)
         {
             if (userId <= 0)

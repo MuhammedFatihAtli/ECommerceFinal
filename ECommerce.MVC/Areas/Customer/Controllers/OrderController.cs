@@ -18,6 +18,8 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
         private readonly IServiceUnit _service;
         private readonly UserManager<User> _userManager;
 
+
+        // Constructor üzerinden bağımlılıklar alınır
         public OrderController(IServiceUnit service, UserManager<User> userManager)
         {
             _service = service;
@@ -30,8 +32,10 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
+                // Kullanıcı oturum açmamışsa login sayfasına yönlendir
                 return RedirectToAction("Login", "Account", new { area = "" });
             }
+            // Siparişler çekilir
             var orders = await _service.OrderService.GetOrdersByUserAsync(user.Id);
             return View(orders);
         }
@@ -41,6 +45,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var order = await _service.OrderService.GetOrderByIdAsync(id);
+            // Sipariş bulunamazsa veya kullanıcıya ait değilse hata döner
             if (order == null || order.UserId != user.Id)
             {
                 TempData["Error"] = "Sipariş bulunamadı veya yetkiniz yok.";
@@ -56,16 +61,19 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var order = await _service.OrderService.GetOrderByIdAsync(id);
+            // Sipariş yoksa veya kullanıcıya ait değilse yetkisiz erişim
             if (order == null || order.UserId != user.Id)
             {
                 TempData["Error"] = "Sipariş bulunamadı veya yetkiniz yok.";
                 return RedirectToAction(nameof(Index));
             }
+            // Sipariş zaten iptal edilmişse ya da teslim edildiyse iptal edilemez
             if (order.Status == OrderStatus.Cancelled || order.Status == OrderStatus.Delivered)
             {
                 TempData["Error"] = "Bu sipariş iptal edilemez.";
                 return RedirectToAction(nameof(Index));
             }
+            // Sipariş durumu güncellenir
             var updateDto = new OrderUpdateDTO
             {
                 Id = id,
@@ -75,7 +83,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             TempData["Success"] = "Sipariş başarıyla iptal edildi.";
             return RedirectToAction(nameof(Index));
         }
-
+        // Tek ürünle hızlı sipariş oluşturur
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int productId)
@@ -83,6 +91,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return RedirectToAction("Login", "Account", new { area = "" });
+            // Ürün kontrolü yapılır
             var product = await _service.ProductService.GetProductByIdAsync(productId);
             if (product == null)
             {
@@ -100,6 +109,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
                 UnitPrice = product.Price,
                 TotalPrice = product.Price
             };
+            // Sipariş DTO'su oluşturulur
             var orderDto = new ECommerce.Application.DTOs.OrderDTOs.OrderDTO
             {
                 UserId = user.Id,
@@ -112,6 +122,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
                 ShippingAddress = "-",
                 OrderItems = new List<ECommerce.Application.DTOs.OrderDTOs.OrderItemDTO> { orderItem }
             };
+            // Sipariş veritabanına kaydedilir
             await _service.OrderService.CreateOrderAsync(orderDto);
             TempData["Success"] = "Siparişiniz başarıyla oluşturuldu.";
             return RedirectToAction("Index", "Dashboard");

@@ -13,26 +13,32 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
+        // Servis katmanına ve AutoMapper'a erişim için gerekli nesneler
         private readonly IServiceUnit _service;
         private readonly IMapper _mapper;
 
+        // Constructor: servis ve mapper dependency injection ile alınır
         public ProductController(IServiceUnit service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
         }
-
+        // Ürünleri listeleyen sayfa
         public async Task<IActionResult> Index(int? categoryId)
         {
+            // Eğer kategori ID'si verilmişse o kategoriye ait ürünler listelenir
             var products = await _service.ProductService.GetProductsByCategoryIdAsync(categoryId);
+
+            // Kategorileri dropdown'da göstermek için SelectList olarak ViewBag'e aktar
             var categories = await _service.CategoryService.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
             return View(products);
         }
-
+        // Ürün oluşturma formunu getiren GET action
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            // Kategori ve satıcı listeleri View'a gönderilir
             var categories = await _service.CategoryService.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
@@ -42,18 +48,13 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Create()
-        //{
-        //    var categories = await _service.CategoryService.GetAllAsync();
-        //    ViewBag.Categories = new SelectList(categories, "Id", "Name");
-        //    return View();
-        //}
+        // Ürün oluşturma işlemini yapan POST action
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateDTO model)
         {
+            // Model doğrulama başarısızsa View tekrar gösterilir
             if (!ModelState.IsValid)
             {
                 var categories = await _service.CategoryService.GetAllAsync();
@@ -65,11 +66,13 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
 
             try
             {
-                // Eğer seller seçilmemişse, admin seller kullanılacak
+                // Eğer SellerId belirtilmemişse, admin kullanıcının seller'ı atanır
+              
                 if (model.SellerId == 0)
                 {
                     var adminUserName = User.Identity?.Name;
 
+                    // Kullanıcı adı alınamadıysa hata gösterilir
                     if (string.IsNullOrEmpty(adminUserName))
                     {
                         TempData["Error"] = "Kullanıcı kimliği bulunamadı!";
@@ -79,9 +82,10 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
                         ViewBag.Sellers = new SelectList(sellers, "Id", "CompanyName");
                         return View(model);
                     }
-                    // Admin'e ait seller kaydını getir
+                    // Admin kullanıcısına ait seller bilgisi alınır
+                   
                     var adminSeller = await _service.SellerService.GetByUserNameAsync(adminUserName);
-
+                    // Seller bulunamazsa uyarı verilir
                     if (adminSeller == null)
                     {
                         TempData["Error"] = "Admin'e ait seller kaydı bulunamadı. Lütfen önce oluşturun.";
@@ -91,10 +95,10 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
                         ViewBag.Sellers = new SelectList(sellers, "Id", "CompanyName");
                         return View(model);
                     }
-
+                    // Admin seller atanır
                     model.SellerId = adminSeller.Id;
                 }
-
+                // Ürün oluşturulur
                 await _service.ProductService.CreateProductAsync(model);
 
                 TempData["Success"] = "Ürün başarıyla oluşturuldu!";
@@ -102,6 +106,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
+                // Hata durumunda kullanıcı bilgilendirilir
                 TempData["Error"] = $"Ürün oluşturulurken bir hata oluştu: {ex.Message}";
                 var categories = await _service.CategoryService.GetAllAsync();
                 var sellers = await _service.SellerService.GetAllAsync();
@@ -111,114 +116,36 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
             }
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(ProductCreateDTO model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        var categories = await _service.CategoryService.GetAllAsync();
-        //        ViewBag.Categories = new SelectList(categories, "Id", "Name");
-        //        return View(model);
-        //    }
+        // Ürün düzenleme sayfasını getiren GET action
 
-        //    try
-        //    {
-        //        var adminUserName = User.Identity?.Name;
-
-        //        if (string.IsNullOrEmpty(adminUserName))
-        //        {
-        //            TempData["Error"] = "Kullanıcı kimliği bulunamadı!";
-        //            var categories = await _service.CategoryService.GetAllAsync();
-        //            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-        //            return View(model);
-        //        }
-
-        //        // Admin'e ait seller kaydını getir
-        //        var adminSeller = await _service.SellerService.GetByUserNameAsync(adminUserName);
-
-        //        if (adminSeller == null)
-        //        {
-        //            TempData["Error"] = "Admin kullanıcıya ait bir satıcı kaydı bulunamadı. Lütfen önce bir seller kaydı oluşturun.";
-        //            var categories = await _service.CategoryService.GetAllAsync();
-        //            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-        //            return View(model);
-        //        }
-
-        //        model.SellerId = adminSeller.Id;
-
-        //        await _service.ProductService.CreateProductAsync(model);
-
-        //        TempData["Success"] = "Ürün başarıyla oluşturuldu!";
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        TempData["Error"] = $"Ürün oluşturulurken bir hata oluştu: {ex.Message}";
-        //        var categories = await _service.CategoryService.GetAllAsync();
-        //        ViewBag.Categories = new SelectList(categories, "Id", "Name");
-        //        return View(model);
-        //    }
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> Edit(int id)
-        //{
-        //    var product = await _service.ProductService.GetProductByIdAsync(id);
-        //    if (product == null)
-        //    {
-        //        TempData["Error"] = "Ürün bulunamadı!";
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    var categories = await _service.CategoryService.GetAllAsync();
-        //    ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
-        //    return View(product);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, ProductDTO model)
-        //{
-        //    if (id != model.Id)
-        //        return BadRequest();
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        await _service.ProductService.UpdateProductAsync(id, model);
-        //        TempData["Success"] = "Ürün başarıyla güncellendi!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    var categories = await _service.CategoryService.GetAllAsync();
-        //    ViewBag.Categories = new SelectList(categories, "Id", "Name", model.CategoryId);
-        //    return View(model);
-        //}
-        // GET: Ürün düzenleme sayfası
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var productDto = await _service.ProductService.GetProductByIdAsync(id);
             if (productDto == null) return NotFound();
 
+            // DTO, düzenleme formuna uygun DTO'ya çevrilir
             // ProductDTO → ProductEditDTO dönüşümü (AutoMapper veya manuel)
             var editDto = _mapper.Map<ProductEditDTO>(productDto);
 
+            // Kategoriler dropdown için hazırlanır
             // Kategorileri getir, SelectList olarak ViewBag'e koy
             var categories = await _service.CategoryService.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", editDto.CategoryId);
 
             return View(editDto);
         }
-
+        // Ürün düzenleme işlemini yapan POST action
         // POST: Ürün düzenleme işlemi
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductEditDTO dto)
         {
+            // URL ile gelen id ile DTO içindeki id uyuşmuyorsa hata döndür
             if (id != dto.Id)
                 return BadRequest();
 
+            // Model geçerli değilse form geri döndürülür
             if (!ModelState.IsValid)
             {
                 // Model doğrulama hatalıysa, kategorileri tekrar yükle
@@ -229,12 +156,14 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
 
             try
             {
+                // Ürün güncellenir
                 await _service.ProductService.UpdateProductAsync(id, dto); // DTO tipi net olmalı
                 TempData["Success"] = "Ürün başarıyla güncellendi!";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                // Hata durumunda kullanıcıya bilgi verilir
                 ModelState.AddModelError(string.Empty, $"Güncelleme sırasında hata oluştu: {ex.Message}");
                 var categories = await _service.CategoryService.GetAllAsync();
                 ViewBag.Categories = new SelectList(categories, "Id", "Name", dto.CategoryId);
@@ -242,7 +171,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
             }
         }
 
-
+        // Ürünü silmeden önce onay sayfasını gösterir
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _service.ProductService.GetProductByIdAsync(id);
@@ -254,7 +183,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
 
             return View(product);
         }
-
+        // Ürünü silen POST action
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

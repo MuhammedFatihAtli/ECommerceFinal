@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // CategoryRepository sınıfı, Category entity'si için veritabanı işlemlerini gerçekleştirir.
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
         public CategoryRepository(AppDbContext context) : base(context)

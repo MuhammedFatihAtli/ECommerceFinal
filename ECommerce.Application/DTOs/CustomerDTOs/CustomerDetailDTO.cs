@@ -1,5 +1,6 @@
 ﻿namespace ECommerce.Application.DTOs.CustomerDTOs
 {
+    // CustomerDetailDTO.cs", müşteri detaylarını tutar.
     public class CustomerDetailDTO
     {
         public int Id { get; set; }

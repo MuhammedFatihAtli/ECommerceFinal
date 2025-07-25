@@ -1,5 +1,6 @@
 ﻿namespace ECommerce.Application.DTOs.EnrollmentDTOs
 {
+    // ProfileDTO.cs", kullanıcı profili bilgilerini tutar.
     public class ProfileDTO
     {
         public int Id { get; set; }

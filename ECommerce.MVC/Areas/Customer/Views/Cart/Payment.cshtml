@@ -1,12 +1,52 @@
+@model ECommerce.Application.VMs.Cart.PaymentVM
+
 @{
-    ViewData["Title"] = "Ödeme";
+    ViewData["Title"] = "Ödeme Sayfası";
     Layout = "~/Areas/Customer/Views/Shared/_CustomerLayout.cshtml";
 }
 
-<h2>Ödeme Sayfası</h2>
-<p>Burada ödeme işlemleri yapılacak. (Demo)</p>
-<form asp-action="PaymentPost" asp-controller="Cart" asp-area="Customer" method="post" class="d-inline">
-    @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-success">Ödeme Yap</button>
-</form>
-<a asp-action="Index" class="btn btn-primary">Sepete Dön</a> 
+<div class="container py-5">
+    <div class="card shadow-sm p-4 mx-auto" style="max-width: 600px;">
+        <h3 class="mb-3">💳 Ödeme Sayfası</h3>
+        <p class="text-muted">Lütfen kart ve adres bilgilerinizi giriniz.</p>
+
+        <form asp-action="Payment" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="CardNumber" class="form-label"></label>
+                <input asp-for="CardNumber" class="form-control" />
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ExpiryDate" class="form-label"></label>
+                    <input asp-for="ExpiryDate" class="form-control" placeholder="MM/YY" />
+                    <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CVV" class="form-label"></label>
+                    <input asp-for="CVV" class="form-control" />
+                    <span asp-validation-for="CVV" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <textarea asp-for="Address" class="form-control"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">Ödeme Yap</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Sepete Dön</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

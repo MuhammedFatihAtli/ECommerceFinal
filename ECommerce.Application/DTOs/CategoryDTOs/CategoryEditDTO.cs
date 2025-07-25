@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.CategoryDTOs
 {
+    // CategoryEditDTO.cs", kategori düzenleme işlemleri için gerekli bilgileri tutar.
     public record CategoryEditDTO
     {
         public int Id { get; set; }

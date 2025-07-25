@@ -1,12 +1,9 @@
 ﻿using ECommerce.Application.DTOs.OrderDTOs;
-using ECommerce.Domain.Entities;
 using ECommerce.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IOrderService.cs", sipariş işlemleri için gerekli metodları tanımlar.
     public interface IOrderService
     {
         Task<IEnumerable<OrderDTO>> GetAllOrdersAsync();

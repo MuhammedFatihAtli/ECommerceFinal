@@ -1,5 +1,6 @@
 ﻿namespace ECommerce.Application.DTOs.SellerDTOs
 {
+    // SellerUpdateDTO.cs", satıcı bilgilerini güncellemek için gerekli bilgileri tutar.
     public class SellerUpdateDTO
     {
         public int Id { get; set; }

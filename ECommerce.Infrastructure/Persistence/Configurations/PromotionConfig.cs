@@ -4,6 +4,7 @@ using ECommerce.Domain.Entities;
 
 public class PromotionConfig : IEntityTypeConfiguration<Promotion>
 {
+    // PromotionConfig sınıfı, Promotion entity'sinin EF Core ile nasıl eşleneceğini tanımlar.
     public void Configure(EntityTypeBuilder<Promotion> builder)
     {
         builder.HasKey(p => p.Id);

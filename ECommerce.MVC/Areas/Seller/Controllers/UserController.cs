@@ -14,14 +14,14 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
         private readonly IServiceUnit _service;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
-
+        // Constructor: Gerekli servislerin bağımlılık enjeksiyonu
         public UserController(IServiceUnit service, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             _service = service;
             _userManager = userManager;
             _roleManager = roleManager;
         }
-
+        // Kullanıcı listesini getirir
         public async Task<IActionResult> IndexAsync()
         {
             try
@@ -35,11 +35,13 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 return View(new List<UserDTO>());
             }
         }
+        // Kullanıcı oluşturma formunu gösterir
         public IActionResult Create()
         {
             ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList(); 
             return View();
-        }        
+        }
+        // Yeni kullanıcı oluşturur
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserCreateDTO dto, string[] selectedRoles)
@@ -49,7 +51,7 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
                 return View(dto);
             }
-
+            // Yeni kullanıcı nesnesi oluştur
             var user = new User
             {
                 UserName = dto.UserName,
@@ -59,10 +61,11 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 CreatedDate = DateTime.UtcNow
             };
 
-            var result = await _userManager.CreateAsync(user, dto.Password);
+            var result = await _userManager.CreateAsync(user, dto.Password);// Identity ile kullanıcı oluştur
 
             if (result.Succeeded)
             {
+                // Rol atamaları
                 if (selectedRoles != null)
                 {
                     foreach (var role in selectedRoles)
@@ -82,7 +85,7 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
             ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
             return View(dto);
         }
-
+        // Kullanıcı düzenleme sayfası (GET)
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -97,12 +100,12 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 Email = user.Email
             };
 
-            ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
-            ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
+            ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();// Tüm roller
+            ViewBag.UserRoles = await _userManager.GetRolesAsync(user);// Mevcut roller
 
             return View(dto);
         }
-
+        // Kullanıcıyı güncelleme işlemi (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserUpdateDTO dto, string[] selectedRoles)
@@ -116,13 +119,13 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
                 return View(dto);
             }
-
+            // Kullanıcı bilgilerini güncelle
             user.UserName = dto.UserName;
             user.FullName = dto.FullName;
             user.Email = dto.Email;
 
             var result = await _userManager.UpdateAsync(user);
-
+           
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -132,12 +135,12 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
                 return View(dto);
             }
-
+            // Şifre değişikliği varsa
             if (!string.IsNullOrEmpty(dto.Password))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var passwordResult = await _userManager.ResetPasswordAsync(user, token, dto.Password);
-
+                // Şifre değiştirilecekse
                 if (!passwordResult.Succeeded)
                 {
                     foreach (var error in passwordResult.Errors)
@@ -148,7 +151,7 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                     return View(dto);
                 }
             }
-
+            // Rolleri güncelle
             if (selectedRoles != null)
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
@@ -159,6 +162,8 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
             TempData["Success"] = "Kullanıcı başarıyla güncellendi!";
             return RedirectToAction(nameof(Index));
         }
+
+        // Kullanıcı silme işlemi
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)

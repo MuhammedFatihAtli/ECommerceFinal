@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // FavoriteRepository sýnýfý, Favori ürünler ile ilgili veritabaný iþlemlerini gerçekleþtirir.
     public class FavoriteRepository : IFavoriteRepository
     {
         private readonly AppDbContext _context;

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IAuthService.cs, kimlik doğrulama işlemleri için gerekli metotları tanımlar.
     public interface IAuthService
     {
         Task<AuthResult> LoginAsync(LoginDTO dto);

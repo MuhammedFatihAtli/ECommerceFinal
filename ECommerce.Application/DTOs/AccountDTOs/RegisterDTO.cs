@@ -2,6 +2,7 @@
 
 namespace ECommerce.Application.DTOs.AccountDTOs
 {
+    // RegisterDTO.cs, kullanıcı kayıt işlemleri için gerekli bilgileri tutar.
     public class RegisterDTO
     {
         [Required(ErrorMessage = "Kullanıcı adı boş geçilemez!")]

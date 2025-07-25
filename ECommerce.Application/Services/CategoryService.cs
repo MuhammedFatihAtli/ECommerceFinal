@@ -14,12 +14,24 @@ namespace ECommerce.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+       
         public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// Yeni bir kategoriyi depoya asenkron olarak ekler.
+        /// </summary>
+        /// <remarks>
+        /// Kategori adı, büyük/küçük harf duyarsız olarak benzersizliği doğrulanır.
+        /// Açıklama sağlanmazsa, varsayılan olarak boş bir dize kullanılır.
+        /// </remarks>
+        /// <param name="dto">Eklenmek istenen kategorinin adı ve açıklamasını içeren veri transfer nesnesi.</param>
+        /// <returns>Asenkron işlemi temsil eden bir görev (task).</returns>
+        /// <exception cref="BusinessRuleValidationException">
+        /// Kategori adı null, boş veya yalnızca boşluk karakterlerinden oluşuyorsa veya aynı isimde bir kategori zaten mevcutsa fırlatılır.
+        /// </exception>
         public async Task AddAsync(CategoryCreateDTO dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Name))
@@ -35,6 +47,7 @@ namespace ECommerce.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        // DeleteAsync metodu, verilen kategori kimliğine sahip kategoriyi siler.
         public async Task DeleteAsync(int id)
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id, true);
@@ -46,6 +59,7 @@ namespace ECommerce.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        // GetAllAsync metodu, tüm kategorileri asenkron olarak getirir.
         public async Task<IEnumerable<CategoryDTO>> GetAllAsync(bool isTrack = true, bool ignoreFilters = false)
         {
             var categories = await _unitOfWork.CategoryRepository.GetAllAsync(
@@ -56,8 +70,7 @@ namespace ECommerce.Application.Services
         }
 
 
-
-
+        /// GetByIdAsync metodu, verilen kategori kimliğine sahip kategoriyi asenkron olarak getirir.
         public async Task<CategoryDTO> GetByIdAsync(int id)
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id, true);
@@ -66,6 +79,7 @@ namespace ECommerce.Application.Services
             return _mapper.Map<CategoryDTO>(category);
         }
 
+        // UpdateAsync metodu, verilen kategori kimliğine sahip kategoriyi asenkron olarak günceller.
         public async Task UpdateAsync(CategoryEditDTO dto)
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(dto.Id, true);

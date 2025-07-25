@@ -21,13 +21,14 @@ namespace ECommerce.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        // SellerService, satıcı yönetimi ile ilgili işlemleri yöneten bir hizmet sınıfıdır.
         public async Task AddAsync(SellerCreateDTO dto)
         {
             var seller = _mapper.Map<Seller>(dto);
             await _unitOfWork.SellerRepository.AddAsync(seller);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // DeleteAsync metodu, verilen satıcı kimliğine sahip satıcıyı siler.
         public async Task DeleteAsync(int id)
         {
             var seller = await _unitOfWork.SellerRepository.GetByIdAsync(id);
@@ -38,12 +39,13 @@ namespace ECommerce.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        // GetAllAsync metodu, tüm satıcıları asenkron olarak getirir.
         public async Task<List<SellerDTO>> GetAllAsync()
         {
             var sellers = await _unitOfWork.SellerRepository.GetAllAsync(isTrack: false);
             return _mapper.Map<List<SellerDTO>>(sellers);
         }
-
+        // GetByIdAsync metodu, verilen satıcı kimliğine sahip satıcıyı asenkron olarak getirir.
         public async Task<SellerDTO> GetByIdAsync(int id)
         {
             var seller = await _unitOfWork.SellerRepository.GetByIdAsync(id);
@@ -53,6 +55,7 @@ namespace ECommerce.Application.Services
             return _mapper.Map<SellerDTO>(seller);
         }
 
+        // GetByUserNameAsync metodu, verilen kullanıcı adına sahip satıcıyı asenkron olarak getirir.
         public async Task<SellerDTO> GetByUserNameAsync(string userName)
         {
             if (string.IsNullOrEmpty(userName))
@@ -79,7 +82,7 @@ namespace ECommerce.Application.Services
                 throw new Exception($"Mapping error: {ex.Message}", ex);
             }
         }
-
+        // LoginAsync metodu, satıcı giriş işlemini asenkron olarak gerçekleştirir.
         public async Task<LoginResultDTO> LoginAsync(LoginDTO dto)
         {
             var seller = await _unitOfWork.SellerRepository
@@ -97,7 +100,8 @@ namespace ECommerce.Application.Services
             };
         }
 
-        public  async Task UpdateAsync(SellerUpdateDTO dto)
+        // UpdateAsync metodu, mevcut bir satıcıyı günceller.
+        public async Task UpdateAsync(SellerUpdateDTO dto)
         {
             var seller = await _unitOfWork.SellerRepository.GetByIdAsync(dto.Id);
             if (seller == null)

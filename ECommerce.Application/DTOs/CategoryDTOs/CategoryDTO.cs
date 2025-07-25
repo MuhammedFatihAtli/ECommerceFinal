@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.CategoryDTOs
 {
+    // CategoryDTO.cs", kategori bilgilerini tutar.
     public record CategoryDTO : BaseDTO
     {
         public CategoryDTO(string name)

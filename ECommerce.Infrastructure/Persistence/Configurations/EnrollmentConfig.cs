@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Configurations
 {
+    // EnrollmentConfig sınıfı, Enrollment entity'sinin EF Core ile nasıl eşleneceğini tanımlar.
     public class EnrollmentConfig : IEntityTypeConfiguration<Enrollment>
     {
         public void Configure(EntityTypeBuilder<Enrollment> builder)

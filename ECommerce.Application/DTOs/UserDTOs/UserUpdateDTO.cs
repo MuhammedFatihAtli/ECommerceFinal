@@ -2,6 +2,7 @@
 
 namespace ECommerce.Application.DTOs.UserDTOs
 {
+    // UserUpdateDTO.cs, kullanıcı bilgilerini güncellemek için gerekli bilgileri tutar.
     public class UserUpdateDTO
     {
         public int Id { get; set; }
@@ -23,7 +24,6 @@ namespace ECommerce.Application.DTOs.UserDTOs
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Şifre en az {2} karakter olmalıdır")]
         public string? Password { get; set; }
 
-        // [Required(ErrorMessage = "Role alanı boş geçilemez!")]
-        // public string Role { get; set; }
+        
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.AccountDTOs
 {
+    // LoginDTO.cs kullanıcı giriş işlemleri için gerekli bilgileri tutar.
     public class LoginDTO
     {
         [Required(ErrorMessage = "Email alanı boş geçilemez!")]

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // OrderRepository sınıfı, siparişlerle ilgili veritabanı işlemlerini gerçekleştirir.
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         private readonly AppDbContext _context;

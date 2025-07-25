@@ -8,6 +8,7 @@ using ECommerce.Domain.Entities;
 
 namespace ECommerce.Application.DTOs.UserDTOs
 {
+    // UserDTO.cs, kullanıcı bilgilerini tutar ve kullanıcı yönetimi işlemleri için kullanılır.
     public class UserDTO
     {
         public int Id { get; set; }

@@ -12,6 +12,7 @@ using ECommerce.Domain.Entities;
 
 namespace ECommerce.Infrastructure.UnitOfWorks
 {
+    //repository'leri tek bir yerden erişilebilir sağlama .(Tek noktadan tüm veritabanı işlemleri yönetme)
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
@@ -72,12 +73,14 @@ namespace ECommerce.Infrastructure.UnitOfWorks
                 throw new Exception("Değişiklik işlenemedi!");
         }
 
+        //DB işlemlerini bir işlem bloğu olarak başlar
         public async Task BeginTransactionAsync()
         {
             if (_transaction == null)
                 _transaction = await _context.Database.BeginTransactionAsync();
         }
 
+        //Her şey doğruysa değişiklikleri onayla
         public async Task CommitTransactionAsync()
         {
             if (_transaction != null)
@@ -88,6 +91,7 @@ namespace ECommerce.Infrastructure.UnitOfWorks
             }
         }
 
+        //Hata olursa geri al (iptal et).
         public async Task RollbackTransactionAsync()
         {
             if (_transaction != null)

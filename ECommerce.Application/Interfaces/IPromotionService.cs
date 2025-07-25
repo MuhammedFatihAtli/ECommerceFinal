@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ECommerce.Domain.Entities;
+﻿using ECommerce.Domain.Entities;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IPromotionService.cs", promosyon işlemleri için gerekli servis arayüzünü tanımlar.
     public interface IPromotionService
     {
         Task CreateAsync(Promotion promotion);

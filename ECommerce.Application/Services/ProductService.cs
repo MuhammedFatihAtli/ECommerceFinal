@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Application.Services
 {
+    // ProductService, ürün yönetimi ile ilgili işlemleri yöneten bir hizmet sınıfıdır.
     public class ProductService : IProductService
     {
 
@@ -24,6 +25,7 @@ namespace ECommerce.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        // CreateProductAsync metodu, yeni bir ürün oluşturur.
         public async Task CreateProductAsync(ProductCreateDTO productCreateDto)
         {
             bool exists = await _unitOfWork.ProductRepository.AnyAsync(p => p.Name.ToLower().Equals(productCreateDto.Name.ToLower()));
@@ -85,6 +87,7 @@ namespace ECommerce.Application.Services
 
 
         }
+        // UpdateProductAsync metodu, mevcut bir ürünü günceller.
         public async Task UpdateProductAsync(int id, ProductEditDTO productDto)
         {
             var existingProduct = await _unitOfWork.ProductRepository.GetByIdAsync(id, true);
@@ -172,6 +175,7 @@ namespace ECommerce.Application.Services
         {
             var products = await _unitOfWork.ProductRepository.GetAllAsync(
                 filter: null,
+                include: p => p.Include(x => x.Category),
                 isTrack: isTrack,
                 ignoreFilters: ignoreFilters);
 
@@ -191,52 +195,14 @@ namespace ECommerce.Application.Services
             return _mapper.Map<ProductDTO>(product);
         }
 
-        //public async Task UpdateProductAsync(int id, ProductDTO productDto)
-        //{
-        //    var existingProduct = await _unitOfWork.ProductRepository.GetByIdAsync(id, true);
-        //    if (existingProduct == null)
-        //    {
-        //        throw new Exception("Ürün bulunamadı");
-        //    }
-
-        //    // Yeni resim yüklendiyse
-        //    if (productDto.ImageFile != null && productDto.ImageFile.Length > 0)
-        //    {
-        //        // 1. Eski dosyayı sil (opsiyonel)
-        //        var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existingProduct.ImagePath?.TrimStart('/'));
-        //        if (System.IO.File.Exists(oldImagePath))
-        //        {
-        //            System.IO.File.Delete(oldImagePath);
-        //        }
-
-        //        // 2. Yeni dosyayı yükle
-        //        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(productDto.ImageFile.FileName);
-        //        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
-
-        //        using (var stream = new FileStream(uploadPath, FileMode.Create))
-        //        {
-        //            await productDto.ImageFile.CopyToAsync(stream);
-        //        }
-
-        //        existingProduct.ImagePath = "/images/" + fileName;
-        //    }
-
-        //    // Diğer alanları güncelle
-        //    existingProduct.Name = productDto.Name;
-        //    existingProduct.Description = productDto.Description;
-        //    existingProduct.Price = productDto.Price;
-        //    existingProduct.Stock = productDto.Stock;
-        //    existingProduct.CategoryId = productDto.CategoryId;
-
-        //    await _unitOfWork.SaveChangesAsync();
-        //}
+        
        
 
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryIdAsync(int? categoryId)
         {
             var products = await _unitOfWork.ProductRepository.GetAllAsync(
         include: p => p.Include(x => x.Category)
-                       .Include(x => x.Seller) // 🔹 SELLER BİLGİLERİ DE ÇEKİLİYOR
+                       .Include(x => x.Seller) //  SELLER BİLGİLERİ DE ÇEKİLİYOR
     );
 
             if (categoryId.HasValue)

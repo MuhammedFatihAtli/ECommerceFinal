@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // CustomerRepository sınıfı, Customer entity'si için veritabanı işlemlerini gerçekleştirir.
     public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
     {
         private readonly AppDbContext _context;

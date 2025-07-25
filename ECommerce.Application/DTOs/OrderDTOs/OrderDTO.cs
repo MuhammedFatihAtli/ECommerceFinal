@@ -1,15 +1,10 @@
-﻿using ECommerce.Domain.Entities;
-using ECommerce.Domain.Enums;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ECommerce.Domain.Enums;
 
 namespace ECommerce.Application.DTOs.OrderDTOs
 {
     public record OrderDTO : BaseDTO
     {
-        
+        // OrderDTO.cs", sipariş bilgilerini tutar.
         public int UserId { get; set; }
         public string UserFullName { get; set; }
         public string UserEmail { get; set; }

@@ -2,6 +2,7 @@
 
 namespace ECommerce.Application.VMs.Account
 {
+    // LoginVM, kullanıcı giriş işlemleri için kullanılan bir ViewModel sınıfıdır.
     public class LoginVM
     {
         [Required(ErrorMessage = "Email alanı boş geçilemez!")]

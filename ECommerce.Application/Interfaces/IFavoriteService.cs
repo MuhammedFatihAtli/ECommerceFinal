@@ -1,9 +1,8 @@
 using ECommerce.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IFavoriteService.cs", favori ürün iþlemleri için gerekli metotlarý tanýmlar.
     public interface IFavoriteService
     {
         Task AddFavoriteAsync(int customerId, int productId);

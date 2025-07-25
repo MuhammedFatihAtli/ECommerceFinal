@@ -2,6 +2,7 @@
 
 namespace ECommerce.Application.DTOs.ProductDTOs
 {
+    // ProductEditDTO.cs, mevcut bir ürünü düzenlemek için gerekli bilgileri tutar.
     public class ProductEditDTO
     {
         public int Id { get; set; }

@@ -1,5 +1,6 @@
 ﻿namespace ECommerce.Application.DTOs.CustomerDTOs
 {
+    // CustomerUpdateDTO.cs", müşteri güncelleme işlemleri için gerekli bilgileri tutar.
     public class CustomerUpdateDTO
     {
         public int Id { get; set; }                   

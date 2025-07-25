@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.UnitOfWorks
 {
+    // ServiceUnit, uygulama düzeyindeki çeşitli hizmetlere erişim sağlayan birimdir.
     public class ServiceUnit : IServiceUnit
     {
         private readonly ICustomerService _customerService;

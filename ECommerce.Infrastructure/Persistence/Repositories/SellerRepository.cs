@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // SellerRepository sınıfı, Seller entity'si için veritabanı işlemlerini gerçekleştirir.
     public class SellerRepository :GenericRepository<Seller>, ISellerRepository
     {
         private readonly AppDbContext _context;

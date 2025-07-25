@@ -10,14 +10,10 @@ using ECommerce.Application.DTOs.SellerDTOs;
 using ECommerce.Application.DTOs.UserDTOs;
 using ECommerce.Application.VMs.Account;
 using ECommerce.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Mappers
 {
+    // MappingProfile.cs", AutoMapper profili, DTO'lar ve Entity'ler arasındaki dönüşümleri tanımlar.
     public class MappingProfile : Profile
     {
         public MappingProfile()

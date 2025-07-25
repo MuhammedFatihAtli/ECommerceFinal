@@ -25,7 +25,8 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
         private readonly IProductService _productService;
         private readonly ICartService _cartService;
         private readonly IMapper _mapper;
-                    
+
+        // Constructor üzerinden servisler enjekte edilir
         public ProductController(IServiceUnit service, IProductService productService, ICartService cartService, IMapper mapper, IFavoriteService favoriteService, UserManager<User> userManager)
 
         {
@@ -37,19 +38,25 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             _mapper = mapper;
         }
 
-        // 🔹 Ürünleri kategoriye göre listele
+     
+        // 🔹 Kullanıcının daha önce sipariş verdiği ürünleri listeler
         public async Task<IActionResult> Index(int? categoryId)
         {
             var user = User.Identity?.Name;
+            // Giriş yapan kullanıcının Id'si alınıyor
             var orders = await _service.OrderService.GetOrdersByUserAsync((await _service.UserService.GetAllAsync()).FirstOrDefault(u => u.UserName == user)?.Id ?? 0);
+            
+            // Kullanıcının daha önce sipariş verdiği ürün Id'leri
             var orderedProductIds = orders.SelectMany(o => o.OrderItems).Select(oi => oi.ProductId).Distinct().ToList();
+            // Ürünler filtreleniyor
             var products = (await _service.ProductService.GetAllProductsAsync(false, false)).Where(p => orderedProductIds.Contains(p.Id)).ToList();
+            // Kategoriler view'e taşınıyor
             var categories = await _service.CategoryService.GetAllAsync();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
             return View(products);
         }
 
-        // 🔹 Ürün detayları
+        // 🔹 Ürün detayları ve yorumlar
         public async Task<IActionResult> Details(int id)
         {
             var product = await _service.ProductService.GetProductByIdAsync(id);
@@ -58,12 +65,13 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
                 TempData["Error"] = "Ürün bulunamadı!";
                 return RedirectToAction(nameof(Index));
             }
-            // Yorumları çek
+            // Ürün yorumları alınıyor
             var comments = await _service.CommentService.GetCommentsByProductIdAsync(id);
             ViewBag.Comments = comments;
             return View(product); // View: ProductDTO
         }
 
+        // 🔹 Ürünü favorilere ekler
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToFavorites(int productId)
@@ -74,6 +82,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        // 🔹 Kullanıcının favori ürünlerini listeler
         public async Task<IActionResult> Favorites()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -81,6 +90,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             return View(favorites);
         }
 
+        // 🔹 Ürünü favorilerden çıkarır
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromFavorites(int productId)
@@ -91,7 +101,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             return RedirectToAction("Favorites");
         }
 
-        // 🔹 Sepete ürün ekle
+        // 🔹 Sepete ürün ekler
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
         {
@@ -102,7 +112,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             await _cartService.AddToCartAsync(int.Parse(userId), productId);
             return RedirectToAction("Index", "Cart");
         }
-
+        // 🔹 Ürüne yorum yapar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddComment(int ProductId, string Text)
@@ -133,7 +143,7 @@ namespace ECommerce.MVC.Areas.Customer.Controllers
             await _service.CommentService.AddCommentAsync(commentDto, userId);
             return RedirectToAction("Details", new { id = ProductId });
         }
-
+        // 🔹 Kullanıcının tüm siparişlerini siler (Geliştirici amaçlı)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ClearOrders()

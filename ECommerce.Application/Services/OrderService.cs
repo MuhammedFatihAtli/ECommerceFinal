@@ -25,12 +25,14 @@ namespace ECommerce.Application.Services
             _orderRepository = orderRepository;
         }
 
+        // GetAllOrdersAsync metodu, tüm siparişleri asenkron olarak getirir.
         public async Task<IEnumerable<OrderDTO>> GetAllOrdersAsync()
         {
             var orders = await _orderRepository.GetOrdersWithDetailsAsync();
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
 
+        // GetOrderByIdAsync metodu, verilen sipariş kimliğine sahip siparişi asenkron olarak getirir.
         public async Task<OrderDTO> GetOrderByIdAsync(int orderId)
         {
             var order = await _orderRepository.GetOrderWithDetailsAsync(orderId);
@@ -40,24 +42,26 @@ namespace ECommerce.Application.Services
             return _mapper.Map<OrderDTO>(order);
         }
 
+        // GetOrdersByStatusAsync metodu, verilen sipariş durumuna sahip tüm siparişleri asenkron olarak getirir.
         public async Task<IEnumerable<OrderDTO>> GetOrdersByStatusAsync(OrderStatus status)
         {
             var orders = await _orderRepository.GetOrdersByStatusAsync(status);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
 
+        // GetOrdersByDateRangeAsync metodu, verilen tarih aralığındaki tüm siparişleri asenkron olarak getirir.
         public async Task<IEnumerable<OrderDTO>> GetOrdersByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             var orders = await _orderRepository.GetOrdersByDateRangeAsync(startDate, endDate);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
-
+        // GetOrdersByUserAsync metodu, verilen kullanıcı kimliğine sahip tüm siparişleri asenkron olarak getirir.
         public async Task<IEnumerable<OrderDTO>> GetOrdersByUserAsync(int userId)
         {
             var orders = await _orderRepository.GetOrdersByUserAsync(userId);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
-
+        // CreateOrderAsync metodu, yeni bir sipariş oluşturur ve veritabanına kaydeder.
         public async Task<OrderDTO> CreateOrderAsync(OrderDTO orderDto)
         {
             // Order entity'sini constructor ile oluştur
@@ -79,7 +83,7 @@ namespace ECommerce.Application.Services
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<OrderDTO>(order);
         }
-
+        // UpdateOrderStatusAsync metodu, verilen sipariş güncelleme DTO'suna göre sipariş durumunu günceller.
         public async Task<OrderDTO> UpdateOrderStatusAsync(OrderUpdateDTO updateDTO)
         {
             var order = await _orderRepository.GetByIdAsync(updateDTO.Id);
@@ -97,7 +101,7 @@ namespace ECommerce.Application.Services
             _orderRepository.Update(order);
             return await GetOrderByIdAsync(order.Id);
         }
-
+        // DeleteOrderAsync metodu, verilen sipariş kimliğine sahip siparişi siler.
         public async Task DeleteOrderAsync(int orderId)
         {
             var order = await _orderRepository.GetByIdAsync(orderId);

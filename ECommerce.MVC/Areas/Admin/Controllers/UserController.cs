@@ -9,14 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.MVC.Areas.Admin.Controllers
 {
+
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
+        // Servis ve yöneticilerin tanımlanması
         private readonly IServiceUnit _service;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
 
+
+
+        // Constructor ile bağımlılıkların enjekte edilmesi
         public UserController(IServiceUnit service, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             _service = service;
@@ -29,11 +34,12 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
         {
             try
             {
+                // Tüm kullanıcıları veritabanından al
                 var users = await _userManager.Users.ToListAsync();
 
                 var userList = new List<UserDTO>();
-                
 
+                // Her kullanıcı için rol bilgisiyle birlikte DTO listesi oluştur
                 foreach (var user in users)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
@@ -49,20 +55,22 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
                         
                     });
                 }
-
+                // Listeyi view'e gönder
                 return View(userList);
             }
             catch (Exception ex)
-            {
+            {// Hata varsa boş liste ve hata mesajı gönderilir
                 TempData["Error"] = ex.Message;
                 return View(new List<UserDTO>());
             }
         }
 
-        // Yeni kullanıcı formu
+        
+        // Yeni kullanıcı formunu döner
         [HttpGet]
         public IActionResult Create()
         {
+            // Roller ViewBag ile view'e gönderilir
             ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList(); // Roller ViewBag ile View'e taşınıyor
             return View();
         }
@@ -72,30 +80,31 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserCreateDTO dto, string[] selectedRoles)
         {
+            // Model valid değilse sayfa geri döner
             if (!ModelState.IsValid)
             {
                 ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
                 return View(dto);
             }
-
-            // Kullanıcı oluştur
+            // Yeni kullanıcı nesnesi oluştur
             var user = new User
             {
                 UserName = dto.UserName,
                 FullName = dto.FullName,
                 Email = dto.Email,
-                Status = true,
-                
+                Status = true,// Varsayılan olarak aktif
+
 
 
                 CreatedDate = DateTime.UtcNow
             };
-
+            // Kullanıcıyı veritabanına ekle (şifre hashlenir)
             // Identity ile kullanıcıyı ekle (şifre hashlenir)
             var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (result.Succeeded)
             {
+                // Kullanıcı başarıyla oluşturulduysa roller atanır
                 // Seçilen rolleri ata
                 if (selectedRoles != null)
                 {
@@ -109,11 +118,11 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
                 TempData["Success"] = "Kullanıcı başarıyla oluşturuldu!";
                 return RedirectToAction(nameof(Index));
             }
-
+            // Hatalar ModelState'e eklenir
             // Hataları modele ekle
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
-
+            // Roller yeniden yüklenir ve form geri döner
             ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
             return View(dto);
         }
@@ -124,7 +133,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null) return NotFound();
-
+            // DTO nesnesi doldurulur
             var dto = new UserUpdateDTO
             {
                 Id = user.Id,
@@ -132,7 +141,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
                 FullName = user.FullName,
                 Email = user.Email
             };
-
+            // Roller ve mevcut kullanıcı rolleri ViewBag ile gönderilir
             ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
             ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
 
@@ -149,6 +158,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
+                // Validasyon hataları varsa geri döner
                 ViewBag.Roles = _roleManager.Roles.Select(x => x.Name).ToList();
                 ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
                 return View(dto);
@@ -223,6 +233,7 @@ namespace ECommerce.MVC.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+        // Toplam kullanıcı sayısını JSON olarak döner (dashboard için kullanılabilir)
         [HttpGet]
         public async Task<IActionResult> GetUserCount()
         {

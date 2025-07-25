@@ -9,20 +9,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.MVC.Controllers
 {
-   
+    // Account işlemlerini yöneten controller (giriş, çıkış, kayıt, profil)
     public class AccountController : Controller
     {
-        private readonly IAuthService _authService;
-        private readonly IEnrollmentService _enrollmentService;
-        private readonly IMapper _mapper;
+        private readonly IAuthService _authService;// Kimlik doğrulama işlemleri için servis
+        private readonly IEnrollmentService _enrollmentService; // Kullanıcı profili işlemleri için servis
+        private readonly IMapper _mapper; // AutoMapper: ViewModel ↔ DTO dönüşümleri
 
+
+       // Constructor: Gerekli servislerin DI ile alınması
         public AccountController(IAuthService authService, IMapper mapper, IEnrollmentService enrollmentService)
         {
             _authService = authService; 
             _enrollmentService = enrollmentService;
             _mapper = mapper;
         }
-        [AllowAnonymous]
+        [AllowAnonymous] // Kimlik doğrulaması gerekmez
         [HttpGet]
         public IActionResult Login()
         {
@@ -30,7 +32,7 @@ namespace ECommerce.MVC.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]// CSRF saldırılarına karşı koruma sağlar
         public async Task<IActionResult> Login(LoginVM model)
         {
             if (!ModelState.IsValid)
@@ -46,6 +48,7 @@ namespace ECommerce.MVC.Controllers
                 if (user != null)
                 {
                     var roles = await _authService.GetUserRolesAsync(user);
+                    // Kullanıcının rolüne göre ilgili alana yönlendirme yapılır
                     if (roles != null && roles.Count > 0)
                     {
                         var role = roles[0]; // Varsayılan olarak ilk rolü al
@@ -74,7 +77,7 @@ namespace ECommerce.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await _authService.LogoutAsync();
+            await _authService.LogoutAsync();// Oturumu kapatmak için auth servisindeki çıkış metodu çağrılır
             return RedirectToAction("Index", "Home");
         }
         [AllowAnonymous]

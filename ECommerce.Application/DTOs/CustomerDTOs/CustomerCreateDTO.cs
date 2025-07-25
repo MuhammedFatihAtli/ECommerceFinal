@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.CustomerDTOs
 {
+    // CustomerCreateDTO.cs", yeni bir müşteri oluşturmak için gerekli bilgileri tutar.
     public class CustomerCreateDTO
     {
         public string FirstName { get; set; }

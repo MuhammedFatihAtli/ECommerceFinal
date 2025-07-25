@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ECommerce.Application.DTOs.SellerDTOs
+﻿namespace ECommerce.Application.DTOs.SellerDTOs
 {
+    // SellerDTO.cs", satıcı bilgilerini tutar.
     public class SellerDTO
     {
         public int Id { get; set; }

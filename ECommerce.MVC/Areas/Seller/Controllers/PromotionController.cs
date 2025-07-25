@@ -27,18 +27,21 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
             _userManager = userManager;
             _service = service;
         }
+        // Promosyon sayfası: Ürünleri ve aktif promosyonları listeler
         public async Task<IActionResult> Index()
         {
-            var seller = await _userManager.GetUserAsync(User);
-            var products = await _productService.GetProductsBySellerIdAsync(seller.Id);
-            var promotions = await _promotionService.GetAllAsync();
+            var seller = await _userManager.GetUserAsync(User);// Giriş yapan satıcı
+            var products = await _productService.GetProductsBySellerIdAsync(seller.Id); // Satıcının ürünleri
+            var promotions = await _promotionService.GetAllAsync();// Tüm promosyonlar
 
             return View(new PromotionVM
             {
-                Products = products.ToList(),
-                Promotions = promotions.ToList()
+                Products = products.ToList(),// ViewModel'e ürünler atanır
+                Promotions = promotions.ToList()// ViewModel'e promosyonlar atanır
             });
         }
+
+        // Yeni promosyon oluşturma formunu gösterir
         public async Task<IActionResult> Create()
         {
             var seller = await _userManager.GetUserAsync(User);
@@ -46,22 +49,26 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
 
             var model = new PromotionCreateVM
             {
-                Products = products.ToList()
+                Products = products.ToList()// View'e gönderilecek ürün listesi
             };
 
             return View(model);
         }
-
+        // Yeni promosyon oluşturma işlemi
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PromotionCreateVM model)
         {
             if (!ModelState.IsValid)
             {
+                // Model geçerli değilse ürünler yeniden yüklenip form tekrar gösterilir
                 var seller = await _userManager.GetUserAsync(User);
                 model.Products = (await _productService.GetProductsBySellerIdAsync(seller.Id)).ToList();
                 return View(model);
             }
+
+
+            // Yeni promosyon nesnesi oluşturulur
 
             var promotion = new Promotion
             {
@@ -71,9 +78,9 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 EndDate = model.EndDate,
             };
 
-            await _promotionService.CreateAsync(promotion);
-
-            // Promosyon oluşturulduktan sonra ürünle ilişkilendir
+            await _promotionService.CreateAsync(promotion);// Veritabanına kaydedilir
+            // Seçilen ürüne promosyon atanır
+          
             var productDto = await _productService.GetProductByIdAsync(model.SelectedProductId);
             if (productDto != null)
             {
@@ -85,12 +92,12 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                     Price = productDto.Price,
                     Stock = productDto.Stock,
                     CategoryId = productDto.CategoryId,
-                    PromotionId = promotion.Id,
+                    PromotionId = promotion.Id,// Yeni oluşturulan promosyon atanır
                     ImagePath = productDto.ImagePath,
                     ImageFile = null
                 };
 
-                await _productService.UpdateProductAsync(productDto.Id, editDto);
+                await _productService.UpdateProductAsync(productDto.Id, editDto);// Ürün güncellenir
             }
 
             return RedirectToAction(nameof(Index));
@@ -104,12 +111,12 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
             var product = await _productService.GetProductByIdAsync(productId);
 
             if (product == null || product.SellerId != seller.Id)
-                return Unauthorized();
+                return Unauthorized(); // Satıcıya ait değilse yetkisiz erişim
 
             var promotions = await _promotionService.GetAllAsync();
-            ViewBag.Promotions = new SelectList(promotions, "Id", "Name", product.PromotionId);
+            ViewBag.Promotions = new SelectList(promotions, "Id", "Name", product.PromotionId); // Seçilebilir promosyon listesi
 
-            return View(product);
+            return View(product); // Ürün bilgisiyle form açılır
         }
 
         // Ürüne promosyon ata (POST)
@@ -120,7 +127,8 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
             var productDto = await _productService.GetProductByIdAsync(productId);
 
             if (productDto == null || productDto.SellerId != seller.Id)
-                return Unauthorized();
+                return Unauthorized();// Yetkisiz işlem
+            // Ürün güncelleme DTO'su hazırlanır
 
             var editDto = new ProductEditDTO
             {
@@ -130,17 +138,17 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
                 Price = productDto.Price,
                 Stock = productDto.Stock,
                 CategoryId = productDto.CategoryId,
-                PromotionId = promotionId,
+                PromotionId = promotionId, // Seçilen promosyon atanır
                 ImagePath = productDto.ImagePath,
                 ImageFile = null
             };
 
-            await _productService.UpdateProductAsync(productId, editDto);
+            await _productService.UpdateProductAsync(productId, editDto);// Ürün güncellenir
 
             return RedirectToAction("Index");
         }
 
-
+        // Promosyon silme işlemi
 
         [HttpPost]
         [ValidateAntiForgeryToken]

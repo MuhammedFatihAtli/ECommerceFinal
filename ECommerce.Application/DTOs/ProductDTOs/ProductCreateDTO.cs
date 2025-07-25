@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ECommerce.Application.DTOs.ProductDTOs
 {
+    // ProductCreateDTO.cs, yeni bir ürün oluşturmak için gerekli bilgileri tutar.
     public class ProductCreateDTO
     {
         [Required(ErrorMessage = "Ürün adı zorunludur")]

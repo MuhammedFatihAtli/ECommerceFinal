@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.OrderDTOs
 {
+    // OrderItemDTO.cs", sipariş öğesi bilgilerini tutar.
     public record OrderItemDTO : BaseDTO
     {
         public int OrderId { get; set; }

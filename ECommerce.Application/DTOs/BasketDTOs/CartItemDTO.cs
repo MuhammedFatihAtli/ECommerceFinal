@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.BasketDTOs
 {
+    // CartItemDTO.cs, sepet içindeki her bir ürünün bilgilerini tutar.
     public class CartItemDTO
     {
         public int ProductId { get; set; }

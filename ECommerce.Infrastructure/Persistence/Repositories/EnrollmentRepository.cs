@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 public class EnrollmentRepository : GenericRepository<Enrollment>, IEnrollmentRepository
 {
+    // EnrollmentRepository sınıfı, Enrollment entity'si için veritabanı işlemlerini gerçekleştirir.
     private readonly AppDbContext _context;
 
     public EnrollmentRepository(AppDbContext context) : base(context)

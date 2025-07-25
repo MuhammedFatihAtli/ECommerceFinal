@@ -1,5 +1,6 @@
 ﻿namespace ECommerce.Application.DTOs.SellerDTOs
 {
+    // SellerCreateDTO.cs", satıcı oluşturma işlemleri için gerekli bilgileri tutar.
     public class SellerCreateDTO
     {
         public string Email { get; set; }

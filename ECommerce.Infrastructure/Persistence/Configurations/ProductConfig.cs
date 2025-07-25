@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ECommerce.Infrastructure.Configurations
 {
+    // ProductConfig sınıfı, Product entity'sinin EF Core ile nasıl eşleneceğini tanımlar.
     public class ProductConfig : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)

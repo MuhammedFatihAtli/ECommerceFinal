@@ -2,6 +2,7 @@
 
 namespace ECommerce.Application.DTOs.UserDTOs
 {
+    // UserCreateDTO.cs, yeni bir kullanıcı oluşturmak için gerekli bilgileri tutar.
     public class UserCreateDTO
     {
         
@@ -17,7 +18,6 @@ namespace ECommerce.Application.DTOs.UserDTOs
         [Required(ErrorMessage = "Email alanı boş geçilemez!")]
         public string Email { get; set; }
 
-        // [Required(ErrorMessage = "Role alanı boş geçilemez!")]
-        // public string Role { get; set; }
+       
     }
 }

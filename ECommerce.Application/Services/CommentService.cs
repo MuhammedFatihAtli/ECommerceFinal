@@ -18,6 +18,7 @@ namespace ECommerce.Application.Services
         private readonly IMapper _mapper;
         private readonly ICommentRepository _commentRepository;
 
+        // Constructor, IUnitOfWork ve IMapper bağımlılıklarını alır ve ilgili repository'yi başlatır.
         public CommentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -25,6 +26,7 @@ namespace ECommerce.Application.Services
             _commentRepository = unitOfWork.CommentRepository;
         }
 
+        // AddCommentAsync metodu, verilen CommentDTO nesnesini kullanarak yeni bir yorum ekler.
         public async Task AddCommentAsync(CommentDTO dto, int? userId)
         {
             var comment = _mapper.Map<Comment>(dto);
@@ -35,6 +37,7 @@ namespace ECommerce.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        // DeleteCommentAsync metodu, verilen yorum kimliğine sahip yorumu siler.
         public async Task<List<CommentDTO>> GetCommentsByProductIdAsync(int productId)
         {
             var comments = await _commentRepository.GetAllAsync(c => c.ProductId == productId) ?? new List<Comment>();

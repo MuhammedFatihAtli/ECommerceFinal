@@ -1,12 +1,8 @@
 ﻿using ECommerce.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // ICartService.cs", sepet işlemleri için gerekli metotları tanımlar.
     public interface ICartService
     {
         Task AddToCartAsync(int userId, int productId);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.AccountDTOs
 {
+    // LoginResultDTO.cs, kullanıcı giriş işlemi sonucunu tutar.
     public class LoginResultDTO
     {
         public bool IsSuccess { get; set; }

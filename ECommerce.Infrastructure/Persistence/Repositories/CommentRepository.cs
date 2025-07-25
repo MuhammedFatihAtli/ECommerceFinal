@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // CommentRepository sınıfı, Comment entity'si için veritabanı işlemlerini gerçekleştirir.
     public class CommentRepository : GenericRepository<Comment>, ICommentRepository
     {
         private readonly AppDbContext _context;

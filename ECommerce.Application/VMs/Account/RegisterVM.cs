@@ -2,6 +2,7 @@
 
 namespace ECommerce.Application.VMs.Account
 {
+    // RegisterVM, kullanıcı kayıt işlemleri için kullanılan bir ViewModel sınıfıdır.
     public class RegisterVM
     {
         [Required(ErrorMessage = "Kullanıcı adı boş geçilemez!")]

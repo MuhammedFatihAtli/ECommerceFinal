@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.VMs.Promotion
 {
+    // PromotionCreateVM, yeni promosyon oluşturma işlemleri için kullanılan ViewModel sınıfıdır.
     public class PromotionCreateVM
     {
         [Required(ErrorMessage = "Ad alanı zorunludur.")]

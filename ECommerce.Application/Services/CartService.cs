@@ -8,6 +8,15 @@ using System.Linq;
 
 namespace ECommerce.Application.Services
 {
+    /// <summary>
+    /// Hem giriş yapmış kullanıcılar hem de misafir kullanıcılar için alışveriş sepeti işlemlerini yönetmeye yönelik işlevsellik sağlar.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="CartService"/> sınıfı, alışveriş sepetine ürün ekleme, çıkarma, listeleme ve temizleme işlemlerini sağlar.
+    /// Bu işlemler hem kullanıcı kimliği ile tanımlanan giriş yapmış kullanıcılar hem de oturum kimliği ile tanımlanan
+    /// misafir kullanıcılar için desteklenmektedir.
+    /// </remarks>
+
     public class CartService : ICartService
     {
         private readonly ICartItemRepository _cartItemRepository;

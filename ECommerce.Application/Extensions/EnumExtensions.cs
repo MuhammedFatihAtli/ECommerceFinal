@@ -10,6 +10,20 @@ namespace ECommerce.Application.Extensions
 {
     public static class EnumExtensions
     {
+        /// <summary>
+        /// Belirtilen enum (sayımlama) değerinin görünen adını döndürür.
+        /// </summary>
+        /// <remarks>
+        /// Bu metot, ilgili enum üyesinin <see cref="DisplayAttribute"/> özniteliğiyle tanımlanıp tanımlanmadığını
+        /// yansıtma (reflection) kullanarak kontrol eder. Eğer böyle bir öznitelik bulunamazsa, varsayılan olarak 
+        /// <see cref="object.ToString"/> metodunun sonucunu döndürür.
+        /// </remarks>
+        /// <param name="enumValue">Görünen adı alınmak istenen enum değeri.</param>
+        /// <returns>
+        /// Eğer enum üyesi <see cref="DisplayAttribute"/> ile tanımlanmışsa, <see cref="DisplayAttribute.Name"/> özelliğinin değeri; 
+        /// aksi takdirde enum değerinin string (metin) temsili döndürülür.
+        /// </returns>
+
         public static string GetDisplayName(this Enum enumValue)
         {
             var member = enumValue.GetType().GetMember(enumValue.ToString()).FirstOrDefault();

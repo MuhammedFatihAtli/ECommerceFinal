@@ -1,13 +1,9 @@
 ﻿using ECommerce.Application.DTOs.AccountDTOs;
 using ECommerce.Application.DTOs.CustomerDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // ICustomerService.cs, müşteri işlemleri için gerekli metotları tanımlar.
     public interface ICustomerService
     {
         Task<List<CustomerListDTO>> GetAllAsync();

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ECommerce.Application.DTOs.ProductDTOs;
-using ECommerce.Domain.Entities;
+﻿using ECommerce.Application.DTOs.ProductDTOs;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IProductService.cs, ürünlerle ilgili işlemleri tanımlar.
     public interface IProductService
     {
         Task<IEnumerable<ProductDTO>> GetAllProductsAsync(bool isTrack = true, bool ignoreFilters = false);

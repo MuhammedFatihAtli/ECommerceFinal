@@ -1,14 +1,8 @@
 ﻿using ECommerce.Application.DTOs.UserDTOs;
-using ECommerce.Application.DTOs.CategoryDTOs;
-using ECommerce.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IUserService.cs, kullanıcı işlemleri için gerekli metotları tanımlar.
     public interface IUserService
     {
         Task<IEnumerable<UserDTO>> GetAllAsync(bool isTrack = true);

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories
 {
+    // ProductRepository sınıfı, Product entity'si için veritabanı işlemlerini gerçekleştirir.
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         private readonly AppDbContext _context;

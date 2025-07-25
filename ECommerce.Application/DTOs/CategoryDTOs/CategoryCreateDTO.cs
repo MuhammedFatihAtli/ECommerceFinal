@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Application.DTOs.CategoryDTOs
 {
+    // CategoryCreateDTO.cs, yeni bir kategori oluşturmak için gerekli bilgileri tutar.
     public record CategoryCreateDTO
     {
         [Required(ErrorMessage = "Kategori adı zorunludur")]

@@ -1,15 +1,8 @@
-﻿using AutoMapper;
-using ECommerce.Application.DTOs.EnrollmentDTOs;
-using ECommerce.Domain.Entities;
-using ECommerce.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ECommerce.Application.DTOs.EnrollmentDTOs;
 
 namespace ECommerce.Application.Interfaces
 {
+    // IEnrollmentService.cs", kullanıcı kayıt işlemleri için gerekli servis arayüzünü tanımlar.
     public interface IEnrollmentService
     {
         Task<List<ProfileDTO>> GetProfilesAsync();

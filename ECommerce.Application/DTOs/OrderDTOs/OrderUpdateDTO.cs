@@ -4,6 +4,7 @@ using System;
 
 namespace ECommerce.Application.DTOs.OrderDTOs
 {
+    // OrderUpdateDTO.cs", sipariş güncelleme işlemleri için gerekli bilgileri tutar.
     public class OrderUpdateDTO
     {
         public int Id { get; set; }

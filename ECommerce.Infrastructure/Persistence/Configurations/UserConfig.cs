@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class UserConfig : IEntityTypeConfiguration<User>
 {
+    // UserConfig sınıfı, User entity'sinin EF Core ile nasıl eşleneceğini tanımlar.
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.Property(u => u.FullName)

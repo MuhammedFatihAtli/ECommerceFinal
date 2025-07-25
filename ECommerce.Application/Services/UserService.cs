@@ -11,17 +11,19 @@ using ECommerce.Domain.Commons;
 
 namespace ECommerce.Application.Services
 {
+    // UserService, kullanıcı yönetimi ile ilgili işlemleri yöneten bir hizmet sınıfıdır.
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher<User> _passwordHasher;
 
+        // UserService, kullanıcı yönetimi ile ilgili işlemleri yöneten bir hizmet sınıfıdır.
         public UserService(IUnitOfWork unitOfWork, IPasswordHasher<User> passwordHasher)
         {
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
         }
-
+        /// AddAsync metodu, yeni bir kullanıcıyı asenkron olarak ekler.
         public async Task AddAsync(UserCreateDTO dto)
         {
             bool exists = await _unitOfWork.UserRepository.AnyAsync(u => u.UserName.ToLower() == dto.UserName.ToLower());
@@ -43,7 +45,7 @@ namespace ECommerce.Application.Services
             _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // DeleteAsync metodu, verilen kullanıcı kimliğine sahip kullanıcıyı siler.
         public async Task DeleteAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id, true);
@@ -55,7 +57,7 @@ namespace ECommerce.Application.Services
             _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // GetAllAsync metodu, tüm kullanıcıları asenkron olarak getirir.
         public async Task<IEnumerable<UserDTO>> GetAllAsync(bool isTrack = true)
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync(
@@ -79,7 +81,7 @@ namespace ECommerce.Application.Services
             return userDtos;
         }
 
-
+        // GetByIdAsync metodu, verilen kullanıcı kimliğine sahip kullanıcıyı asenkron olarak getirir.
         public async Task<UserDTO?> GetByIdAsync(int id, bool ignoreFilters = false)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -94,7 +96,7 @@ namespace ECommerce.Application.Services
                 Status = user.Status
             };
         }
-
+        // GetByUserNameAsync metodu, verilen kullanıcı adına sahip kullanıcıyı asenkron olarak getirir.
         public async Task UpdateAsync(UserUpdateDTO dto)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(dto.Id, true);
@@ -114,7 +116,7 @@ namespace ECommerce.Application.Services
             _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
         }
-           
+        // GetAllDeletedAsync metodu, silinmiş kullanıcıları asenkron olarak getirir.
         public async Task<IEnumerable<UserDTO>> GetAllDeletedAsync()
         {
             var users = await _unitOfWork.UserRepository.FindConditionAsync(c => c.IsDeleted, ignoreFilters: true);
@@ -136,7 +138,8 @@ namespace ECommerce.Application.Services
             }
 
             return userDtos;
-        }              
+        }
+        // SoftDeleteAsync metodu, verilen kullanıcı kimliğine sahip kullanıcıyı soft delete yapar.
         public async Task SoftDeleteAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id, true);
@@ -148,7 +151,7 @@ namespace ECommerce.Application.Services
             _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // RestoreAsync metodu, silinmiş kullanıcıyı geri yükler.
         public async Task RestoreAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id, true);

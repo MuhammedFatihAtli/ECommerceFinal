@@ -7,6 +7,7 @@ namespace ECommerce.MVC.Areas.Seller.Controllers
     [Authorize]
     public class DashboardController : Controller
     {
+        // Satıcı ana sayfasını (dashboard) döndürür
         public IActionResult Index()
         {
             return View();

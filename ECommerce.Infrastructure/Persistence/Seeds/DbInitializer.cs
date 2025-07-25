@@ -10,14 +10,14 @@ namespace ECommerce.Infrastructure.Persistence.Seeds
     public static class DbInitializer
     {
         // Veritabanında eksik migration varsa uygular
-        public static void ConfigureAndCheckMigration(this IApplicationBuilder app)
+        public static void ConfigureAndCheckMigration(this IApplicationBuilder app)//EF Core veritabanında eksik bir migration var mı diye kontrol
         {
-            using var scope = app.ApplicationServices.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            using var scope = app.ApplicationServices.CreateScope();//servislerin kullanılabilineceği bir alan oluşturma
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();//veritabanıyla iletişim
 
-            if (context.Database.GetPendingMigrations().Any())
+            if (context.Database.GetPendingMigrations().Any())//Uygulanmamış migration (değişiklik) var mı diye kontrol eder.
             {
-                context.Database.Migrate();
+                context.Database.Migrate();//varsa olan migrationları uygular
             }
         }
 
@@ -25,12 +25,13 @@ namespace ECommerce.Infrastructure.Persistence.Seeds
         public static async Task EnsureRolesExistAsync(this IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();//ASP.NET Identity’nin rol yöneticisini alır.
 
             string[] roles = { RoleNames.Admin, RoleNames.Customer, RoleNames.Seller };
 
             foreach (var role in roles)
             {
+                //Rol yoksa oluştur 
                 if (!await roleManager.RoleExistsAsync(role))
                 {
                     await roleManager.CreateAsync(new IdentityRole<int>(role));
@@ -127,69 +128,12 @@ namespace ECommerce.Infrastructure.Persistence.Seeds
         }
 
 
-        //public static async Task EnsureAdminSellerExistsAsync(this IServiceProvider serviceProvider)
-        //{
-        //    using var scope = serviceProvider.CreateScope();
-        //    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-
-        //    string adminEmail = "admin@site.com";
-        //    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-        //    if (adminUser == null)
-        //        return;
-
-        //    // DbContext'ten aynı Id'ye sahip Seller var mı kontrol et
-        //    var existingSeller = await context.Sellers
-        //        .FirstOrDefaultAsync(s => s.Id == adminUser.Id);
-
-        //    if (existingSeller == null)
-        //    {
-        //        // Yeni Seller oluştur ve ekle
-        //        var seller = new Seller
-        //        {
-        //            Id = adminUser.Id,
-        //            UserName = adminUser.UserName,
-        //            Email = adminUser.Email,
-        //            CompanyName = "Admin Firma",
-        //            LogoUrl = "/images/admin-logo.png",
-        //            Address = "Merkez/Ankara",
-        //            CreatedDate = DateTime.Now,
-        //            FirstName = "Admin",
-        //            LastName = "User",
-        //            FullName = "Admin User",
-        //            EmailConfirmed = true,
-        //            Status = true,
-        //        };
-
-        //        context.Sellers.Add(seller);
-        //    }
-        //    else
-        //    {
-        //        // Mevcut Seller güncelle
-        //        existingSeller.UserName = adminUser.UserName;
-        //        existingSeller.Email = adminUser.Email;
-        //        existingSeller.CompanyName = "Admin Firma";
-        //        existingSeller.LogoUrl = "/images/admin-logo.png";
-        //        existingSeller.Address = "Merkez/Ankara";
-        //        existingSeller.FirstName = "Admin";
-        //        existingSeller.LastName = "User";
-        //        existingSeller.FullName = "Admin User";
-        //        existingSeller.EmailConfirmed = true;
-        //        existingSeller.Status = true;
-
-        //        // Zaten takip edilen entity olduğu için Update çağrısına gerek yok
-        //    }
-
-        //    await context.SaveChangesAsync();
-        //}
-
-
         public static async Task EnsureCustomerUsersExistAsync(this IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
+            // Müşteri kullanıcılarını tanımla
             var customers = new List<Customer>
     {
         new Customer

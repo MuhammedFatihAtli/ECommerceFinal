@@ -13,6 +13,7 @@ using ECommerce.Domain.UnitOfWorks;
 
 namespace ECommerce.Application.Services
 {
+    // CustomerService, müşteri yönetimi ile ilgili işlemleri yöneten bir hizmet sınıfıdır.
     public class CustomerService : ICustomerService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,13 +24,13 @@ namespace ECommerce.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        // GetAllAsync metodu, tüm müşteri kayıtlarını asenkron olarak getirir.
         public async Task<List<CustomerListDTO>> GetAllAsync()
         {
             var customers = await _unitOfWork.CustomerRepository.GetAllAsync(isTrack: false);
             return _mapper.Map<List<CustomerListDTO>>(customers);
         }
-
+        // GetByIdAsync metodu, verilen müşteri kimliğine sahip müşteri kaydını asenkron olarak getirir.
         public async Task<CustomerDetailDTO> GetByIdAsync(int id)
         {
             var customer = await _unitOfWork.CustomerRepository.GetByIdAsync(id, false);
@@ -38,7 +39,7 @@ namespace ECommerce.Application.Services
 
             return _mapper.Map<CustomerDetailDTO>(customer);
         }
-
+        // AddAsync metodu, yeni bir müşteri kaydı ekler.
         public async Task AddAsync(CustomerCreateDTO dto)
         {
             // Sadece kullanıcı adı kontrolü
@@ -50,7 +51,7 @@ namespace ECommerce.Application.Services
             _unitOfWork.CustomerRepository.Add(customer);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // UpdateAsync metodu, mevcut bir müşteri kaydını günceller.
         public async Task UpdateAsync(CustomerUpdateDTO dto)
         {
             var customer = await _unitOfWork.CustomerRepository.GetByIdAsync(dto.Id);
@@ -62,7 +63,7 @@ namespace ECommerce.Application.Services
             _unitOfWork.CustomerRepository.Update(customer);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // DeleteAsync metodu, verilen müşteri kimliğine sahip müşteri kaydını siler (soft delete).
         public async Task DeleteAsync(int id)
         {
             var customer = await _unitOfWork.CustomerRepository.GetByIdAsync(id);
@@ -73,13 +74,13 @@ namespace ECommerce.Application.Services
             _unitOfWork.CustomerRepository.Update(customer);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        // LoginAsync metodu, müşteri giriş işlemini gerçekleştirir.
         public Task<LoginResultDTO> LoginAsync(LoginDTO dto)
         {
             // Sadece demo amaçlı false döndür
             return Task.FromResult(new LoginResultDTO { IsSuccess = false, Message = "Giriş işlemi desteklenmiyor." });
         }
-
+        // RegisterAsync metodu, yeni bir müşteri kaydı oluşturur.
         public async Task<CustomerDetailDTO> GetByUserNameAsync(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
