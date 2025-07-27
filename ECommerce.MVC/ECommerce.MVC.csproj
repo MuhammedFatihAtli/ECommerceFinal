@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Images\Products\ASSET_MMS_97292542.png" />
+    <Content Remove="wwwroot\Images\Products\header-new-laptop.png" />
+    <Content Remove="wwwroot\Images\Products\images.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ECommerce.Application\ECommerce.Application.csproj" />
     <ProjectReference Include="..\ECommerce.Infrastructure\ECommerce.Infrastructure.csproj" />
     <ProjectReference Include="..\ECommerce.Presentation\ECommerce.Presentation.csproj" />
@@ -17,7 +23,12 @@
     <Folder Include="Areas\Customer\Models\" />
     <Folder Include="Areas\Seller\Data\" />
     <Folder Include="Areas\Seller\Models\" />
-    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Images\Products\ASSET_MMS_97292542.png" />
+    <None Include="wwwroot\Images\Products\header-new-laptop.png" />
+    <None Include="wwwroot\Images\Products\images.jpg" />
   </ItemGroup>
 
   <ItemGroup>

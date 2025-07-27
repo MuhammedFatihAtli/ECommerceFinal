@@ -194,6 +194,179 @@ namespace ECommerce.Infrastructure.Persistence.Seeds
             }
         }
 
+        public static async Task EnsureCategoriesExistAsync(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            if (!context.Categories.Any())
+            {
+                var categories = new List<Category>
+        {
+            new Category("Elektronik", "Telefon, bilgisayar, televizyon gibi ürünler"),
+            new Category("Moda", "Giyim, ayakkabı, aksesuar ürünleri"),
+            new Category("Ev ve Yaşam", "Mobilya, ev dekorasyonu, mutfak ürünleri"),
+            new Category("Kitap", "Roman, ders kitapları, dergiler"),
+            new Category("Spor ve Outdoor", "Spor giyim, kamp ve doğa ürünleri"),
+            new Category("Movie", "Film ve dizi ürünleri"),
+            new Category("Game", "Video oyunları, konsollar ve aksesuarlar"),
+        };
+
+                await context.Categories.AddRangeAsync(categories);
+                await context.SaveChangesAsync();
+            }
+        }
+        public static async Task EnsureProductsExistAsync(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            if (!context.Products.Any())
+            {
+                // Kategori ve Satıcı ID’lerini al
+                var category = await context.Categories.FirstOrDefaultAsync();
+                var seller = await context.Users.OfType<Seller>().FirstOrDefaultAsync();
+
+                if (category == null || seller == null)
+                {
+                    throw new Exception("Ürün eklenemedi çünkü kategori veya satıcı bulunamadı.");
+                }
+
+                var products = new List<Product>
+        {
+            new Product
+            {
+                Name = "iPhone 14",
+                Description = "Apple'ın en yeni akıllı telefonu",
+                Price = 39999,
+                Stock = 50,
+                ImagePath = "/images/products/ASSET_MMS_97292542.png",
+                CategoryId = category.Id,
+                CategoryName = category.Name,
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Gaming Laptop",
+                Description = "Yüksek performanslı oyun laptopu",
+                Price = 29999,
+                Stock = 30,
+                ImagePath = "/images/products/header-new-laptop.png",
+                CategoryId = category.Id,
+                CategoryName = category.Name,
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Bluetooth Kulaklık",
+                Description = "Kablosuz bluetooth kulaklık",
+                Price = 799,
+                Stock = 100,
+                ImagePath = "/images/Products/images.jpg",
+                CategoryId = category.Id,
+                CategoryName = category.Name,
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Toprak Ana Biblo",
+                Description = "Ev dekorasyonu eşyası",
+                Price = 1299,
+                Stock = 10,
+                ImagePath = "/images/products/Demeter.jpg",
+                CategoryId = 3,
+                CategoryName = "Ev ve Yaşam",
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Game of War",
+                Description = "Movie",
+                Price = 299,
+                Stock = 120,
+                ImagePath = "/images/products/space-vertical-wallpaper-preview.jpg",
+                CategoryId = 6,
+                CategoryName = "Movie , Film ve dizi ürünleri",
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Erlik Han 1",
+                Description = "Movie",
+                Price = 199,
+                Stock = 200,
+                ImagePath = "/images/products/Erlik_Han_card_design (1).png",
+                CategoryId = 6,
+                CategoryName = "Movie , Film ve dizi ürünleri",
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Erlik Han 2",
+                Description = "Movie",
+                Price = 199,
+                Stock = 100,
+                ImagePath = "/images/products/Erlik_Han_card_design (1).png",
+                CategoryId = 6,
+                CategoryName = "Movie , Film ve dizi ürünleri",
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Toprak Ana Biblo - 2",
+                Description = "Defolu ev dekorasyonu eşyası",
+                Price = 599,
+                Stock = 10,
+                ImagePath = "/images/products/Demeter.jpg",
+                CategoryId = 3,
+                CategoryName = "Ev ve Yaşam",
+                SellerId = seller.Id
+            },new Product
+            {
+                Name = "Kadın Deri Ceket",
+                Description = "Şık ve modern deri ceket",
+                Price = 899,
+                Stock = 20,
+                 ImagePath = "/images/products/kadın_ceket.png",
+                CategoryId =2,
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Suç ve Ceza",
+                Description = "Fyodor Dostoyevski'nin klasik eseri",
+                Price = 49,
+                Stock = 100,
+                ImagePath = "/images/products/Suç_ve_Ceza.png",
+                CategoryId = 4,
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "Koşu Ayakkabısı",
+                Description = "Hafif ve rahat spor ayakkabı",
+                Price = 599,
+                Stock = 30,
+                ImagePath = "/images/products/Demeter.jpg",
+                CategoryId = 5,
+                SellerId = seller.Id
+            },
+            new Product
+            {
+                Name = "PlayStation 5",
+                Description = "Sony PlayStation 5 Konsol - 1TB",
+                Price = 21999,
+                Stock = 7,
+                ImagePath = "/images/products/playstation-5.png",
+                CategoryId = 7,
+                SellerId = seller.Id 
+            }
+        };
+
+                await context.Products.AddRangeAsync(products);
+                await context.SaveChangesAsync();
+            }
+        }
 
     }
 }

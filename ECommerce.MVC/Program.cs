@@ -95,6 +95,8 @@ namespace ECommerce.MVC
                 await services.EnsureSellerUserExistsAsync();
                 //await services.EnsureAdminSellerExistsAsync();
                 await services.EnsureCustomerUsersExistAsync();
+                await services.EnsureCategoriesExistAsync();
+                await services.EnsureProductsExistAsync();
             }
 
              // Uygulamanın çalışacağı portlar belirleniyor (manuel olarak)
