@@ -343,11 +343,11 @@ namespace ECommerce.Infrastructure.Persistence.Seeds
             },
             new Product
             {
-                Name = "Koşu Ayakkabısı",
-                Description = "Hafif ve rahat spor ayakkabı",
-                Price = 599,
+                Name = "Topuklu Ayakkabı",
+                Description = "Hafif ve zarif ayakkabı",
+                Price = 5999,
                 Stock = 30,
-                ImagePath = "/images/products/Demeter.jpg",
+                ImagePath = "/images/products/png-clipart-women-shoes-women-shoes-thumbnail.png",
                 CategoryId = 5,
                 SellerId = seller.Id
             },
